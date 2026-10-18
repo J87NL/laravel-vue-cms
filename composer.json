@@ -3,11 +3,29 @@
     "description": "Vue and Inertia admin for j87nl/laravel-cms.",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "laravel",
+        "cms",
+        "inertia",
+        "vue",
+        "admin"
+    ],
+    "homepage": "https://github.com/J87NL/laravel-vue-cms",
+    "authors": [
+        {
+            "name": "Johan Montenij",
+            "homepage": "https://j87.nl"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/J87NL/laravel-vue-cms/issues",
+        "source": "https://github.com/J87NL/laravel-vue-cms"
+    },
     "require": {
         "php": "^8.5",
         "illuminate/support": "^13.0",
         "inertiajs/inertia-laravel": "^3.0",
-        "j87nl/laravel-cms": "@dev",
+        "j87nl/laravel-cms": "^0.1",
         "tranquil-tools/laravel-vue-form-builder": "^1.10",
         "tranquil-tools/laravel-vue-table-builder": "^1.9"
     },
@@ -15,15 +33,6 @@
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^5.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../laravel-cms",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "autoload": {
         "psr-4": {
             "J87NL\\VueCms\\": "src/"
