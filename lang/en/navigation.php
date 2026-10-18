@@ -6,4 +6,6 @@ return [
     'pages' => 'Pages',
     'media' => 'Media',
     'menus' => 'Menus',
+    'redirects' => 'Redirects',
+    'settings' => 'Site settings',
 ];

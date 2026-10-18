@@ -10,7 +10,9 @@ use J87NL\VueCms\Http\Controllers\MenuController;
 use J87NL\VueCms\Http\Controllers\MenuItemController;
 use J87NL\VueCms\Http\Controllers\PageController;
 use J87NL\VueCms\Http\Controllers\PagePublicationController;
+use J87NL\VueCms\Http\Controllers\RedirectController;
 use J87NL\VueCms\Http\Controllers\RevisionController;
+use J87NL\VueCms\Http\Controllers\SettingsController;
 
 Route::middleware(config('vue-cms.admin.middleware'))
     ->prefix(config('vue-cms.admin.prefix'))
@@ -59,5 +61,21 @@ Route::middleware(config('vue-cms.admin.middleware'))
             Route::get('menus/{menu:key}/items/{item}/edit', [MenuItemController::class, 'edit'])->name('menu-items.edit')->scopeBindings();
             Route::put('menus/{menu:key}/items/{item}', [MenuItemController::class, 'update'])->name('menu-items.update')->scopeBindings();
             Route::delete('menus/{menu:key}/items/{item}', [MenuItemController::class, 'destroy'])->name('menu-items.destroy')->scopeBindings();
+        });
+
+        Route::middleware(sprintf('can:%s', CmsPermission::Redirects->value))->group(function (): void {
+            Route::get('redirects', [RedirectController::class, 'index'])->name('redirects.index');
+            Route::get('redirects/create', [RedirectController::class, 'create'])->name('redirects.create');
+            Route::post('redirects', [RedirectController::class, 'store'])->name('redirects.store');
+            Route::get('redirects/import', [RedirectController::class, 'importForm'])->name('redirects.import');
+            Route::post('redirects/import', [RedirectController::class, 'import'])->name('redirects.import.store');
+            Route::get('redirects/{redirect}/edit', [RedirectController::class, 'edit'])->name('redirects.edit');
+            Route::put('redirects/{redirect}', [RedirectController::class, 'update'])->name('redirects.update');
+            Route::delete('redirects/{redirect}', [RedirectController::class, 'destroy'])->name('redirects.destroy');
+        });
+
+        Route::middleware(sprintf('can:%s', CmsPermission::Settings->value))->group(function (): void {
+            Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
+            Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
         });
     });

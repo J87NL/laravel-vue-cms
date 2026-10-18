@@ -61,6 +61,22 @@ class VueCmsServiceProvider extends ServiceProvider
                 'permission' => CmsPermission::Menus->value,
                 'order' => 120,
             ],
+            [
+                'key' => 'cms.redirects',
+                'label' => 'vue-cms::navigation.redirects',
+                'route' => 'cms.redirects.index',
+                'icon' => 'Signpost',
+                'permission' => CmsPermission::Redirects->value,
+                'order' => 130,
+            ],
+            [
+                'key' => 'cms.settings',
+                'label' => 'vue-cms::navigation.settings',
+                'route' => 'cms.settings.edit',
+                'icon' => 'Settings2',
+                'permission' => CmsPermission::Settings->value,
+                'order' => 140,
+            ],
         ];
 
         $registered = config($key, []);
