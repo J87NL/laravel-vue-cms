@@ -1,0 +1,50 @@
+{
+    "name": "j87nl/laravel-vue-cms",
+    "description": "Vue and Inertia admin for j87nl/laravel-cms.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "illuminate/support": "^13.0",
+        "inertiajs/inertia-laravel": "^3.0",
+        "j87nl/laravel-cms": "@dev"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^5.0"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../laravel-cms",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "J87NL\\VueCms\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "J87NL\\VueCms\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "J87NL\\VueCms\\VueCmsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
