@@ -54,6 +54,7 @@ abstract class TestCase extends BaseTestCase
     {
         $app['config']->set('media-library.queue_connection_name', 'sync');
         $app['config']->set('queue.default', 'sync');
+        $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing.foreign_key_constraints', true);
         $app['config']->set('table-builder.routes.middleware', [
             'web',
