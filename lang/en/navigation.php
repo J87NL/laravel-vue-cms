@@ -3,5 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'dashboard' => 'Website',
+    'pages' => 'Pages',
+    'media' => 'Media',
+    'menus' => 'Menus',
 ];

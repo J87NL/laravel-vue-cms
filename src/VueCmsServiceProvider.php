@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace J87NL\VueCms;
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use J87NL\Cms\CmsPermission;
+use J87NL\Cms\Models\Page;
+use J87NL\VueCms\Support\PageWriteAccess;
 
 class VueCmsServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,8 @@ class VueCmsServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'vue-cms');
         $this->loadRoutesFrom(__DIR__.'/../routes/admin.php');
 
+        Gate::define(PageWriteAccess::ABILITY, fn (Authorizable $user, Page $page): bool => PageWriteAccess::allows($user, $page));
+
         $this->publishes([
             __DIR__.'/../config/vue-cms.php' => config_path('vue-cms.php'),
         ], 'vue-cms-config');
@@ -30,19 +36,42 @@ class VueCmsServiceProvider extends ServiceProvider
     {
         $key = (string) config('vue-cms.navigation_config_key');
 
-        $alreadyRegistered = collect(config($key, []))->contains('key', 'cms.dashboard');
+        $items = [
+            [
+                'key' => 'cms.pages',
+                'label' => 'vue-cms::navigation.pages',
+                'route' => 'cms.pages.index',
+                'icon' => 'FileText',
+                'permission' => CmsPermission::PagesEdit->value,
+                'order' => 100,
+            ],
+            [
+                'key' => 'cms.media',
+                'label' => 'vue-cms::navigation.media',
+                'route' => 'cms.media.index',
+                'icon' => 'Image',
+                'permission' => CmsPermission::Media->value,
+                'order' => 110,
+            ],
+            [
+                'key' => 'cms.menus',
+                'label' => 'vue-cms::navigation.menus',
+                'route' => 'cms.menus.index',
+                'icon' => 'Menu',
+                'permission' => CmsPermission::Menus->value,
+                'order' => 120,
+            ],
+        ];
 
-        if ($alreadyRegistered) {
-            return;
+        $registered = config($key, []);
+        $registeredKeys = is_array($registered) ? array_column($registered, 'key') : [];
+
+        foreach ($items as $item) {
+            if (in_array($item['key'], $registeredKeys, true)) {
+                continue;
+            }
+
+            config()->push($key, $item);
         }
-
-        config()->push($key, [
-            'key' => 'cms.dashboard',
-            'label' => 'vue-cms::navigation.dashboard',
-            'route' => 'cms.dashboard',
-            'icon' => 'FileText',
-            'permission' => CmsPermission::PagesEdit->value,
-            'order' => 100,
-        ]);
     }
 }
