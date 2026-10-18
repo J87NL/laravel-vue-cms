@@ -38,7 +38,11 @@ const props = defineProps<{
         homeUrl: string;
         homeBlockedReason: string | null;
         unpublishBlockedReason: string | null;
+        publishAt: string | null;
+        unpublishAt: string | null;
+        scheduleForm: FormSchema | null;
     };
+    previewUrl: string;
     write: {
         blockedReason: string | null;
     };
@@ -53,6 +57,13 @@ useBreadcrumbs(() => props.breadcrumbs);
 const errors = useErrors(['page']);
 
 const confirm = useConfirm();
+
+function moment(value: string): string {
+    return new Date(value).toLocaleString(undefined, {
+        dateStyle: 'long',
+        timeStyle: 'short',
+    });
+}
 
 function post(url: string): void {
     router.post(url, {}, { preserveScroll: true });
@@ -96,6 +107,15 @@ async function destroy(): Promise<void> {
                     :class="ui.button"
                 >
                     {{ $t('vue-cms::pages.edit.view') }}
+                </a>
+                <a
+                    :href="previewUrl"
+                    target="_blank"
+                    rel="noopener"
+                    :class="ui.button"
+                    data-test="preview"
+                >
+                    {{ $t('vue-cms::pages.edit.preview') }}
                 </a>
                 <Link :href="breadcrumbs[0]?.href ?? '/'" :class="ui.button">
                     {{ $t('vue-cms::common.back') }}
@@ -202,6 +222,40 @@ async function destroy(): Promise<void> {
             >
                 {{ publication.unpublishBlockedReason }}
             </p>
+
+            <p
+                v-if="publication.publishAt"
+                :class="ui.muted"
+                data-test="publish-at"
+            >
+                {{
+                    $t('vue-cms::pages.publication.publish_at', {
+                        moment: moment(publication.publishAt),
+                    })
+                }}
+            </p>
+            <p
+                v-if="publication.unpublishAt"
+                :class="ui.muted"
+                data-test="unpublish-at"
+            >
+                {{
+                    $t('vue-cms::pages.publication.unpublish_at', {
+                        moment: moment(publication.unpublishAt),
+                    })
+                }}
+            </p>
+
+            <div
+                v-if="publication.scheduleForm && $can('cms.pages.publish')"
+                class="flex flex-col gap-2 border-t border-gray-200 pt-4 dark:border-gray-700"
+                data-test="schedule"
+            >
+                <h3 class="text-sm font-medium">
+                    {{ $t('vue-cms::pages.publication.schedule') }}
+                </h3>
+                <Form :schema="publication.scheduleForm" />
+            </div>
         </section>
 
         <p

@@ -42,6 +42,7 @@ Route::middleware(config('vue-cms.admin.middleware'))
                 Route::post('pages/{page}/publish', [PagePublicationController::class, 'publish'])->name('pages.publish');
                 Route::post('pages/{page}/unpublish', [PagePublicationController::class, 'unpublish'])->name('pages.unpublish');
                 Route::post('pages/{page}/home', [PagePublicationController::class, 'home'])->name('pages.home');
+                Route::post('pages/{page}/schedule', [PagePublicationController::class, 'schedule'])->name('pages.schedule');
             });
         });
 

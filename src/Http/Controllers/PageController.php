@@ -18,8 +18,10 @@ use J87NL\Cms\Actions\MovePage;
 use J87NL\Cms\Actions\SavePage;
 use J87NL\Cms\Blocks\BlockRegistry;
 use J87NL\Cms\CmsPermission;
+use J87NL\Cms\Http\Controllers\PreviewController;
 use J87NL\Cms\Models\Page;
 use J87NL\VueCms\Forms\PageForm;
+use J87NL\VueCms\Forms\SchedulePageForm;
 use J87NL\VueCms\Support\PageWriteAccess;
 use J87NL\VueCms\Tables\BlockTable;
 use J87NL\VueCms\Tables\RevisionTable;
@@ -133,7 +135,19 @@ class PageController extends Controller
                 'homeUrl' => route('cms.pages.home', $page),
                 'homeBlockedReason' => $makeHomePage->blockedReason($page),
                 'unpublishBlockedReason' => ChangePageStatus::unpublishBlockedReason($page),
+                'publishAt' => $page->publish_at?->toIso8601String(),
+                'unpublishAt' => $page->unpublish_at?->toIso8601String(),
+                'scheduleForm' => $canPublish
+                    ? SchedulePageForm::make($page)
+                        ->action(route('cms.pages.schedule', $page))
+                        ->method('POST')
+                        ->fill([
+                            'publish_at' => $page->publish_at?->format('Y-m-d H:i:s'),
+                            'unpublish_at' => $page->unpublish_at?->format('Y-m-d H:i:s'),
+                        ])
+                    : null,
             ],
+            'previewUrl' => PreviewController::url($page),
             'deletion' => [
                 'url' => route('cms.pages.destroy', $page),
                 'blockedReason' => $this->deleteBlockedReason($page, $canPublish),
