@@ -84,3 +84,50 @@ test('the visible column follows the public menu, including parent pages', funct
     $this->get(route('cms.menus.index'), $this->inertiaHeaders())
         ->assertJsonPath('props.menus.0.items.data.0.status', __('vue-cms::menus.statuses.hidden'));
 });
+
+test('an item with items below it cannot be placed under another item', function (): void {
+    $menu = Menu::forKey('main');
+    $parent = $menu->items()->create([
+        'url' => '/a',
+        'label' => 'A',
+    ]);
+    $menu->items()->create([
+        'url' => '/b',
+        'label' => 'B',
+        'parent_id' => $parent->id,
+    ]);
+    $other = $menu->items()->create([
+        'url' => '/c',
+        'label' => 'C',
+    ]);
+
+    $this->put(route('cms.menu-items.update', [$menu, $parent]), [
+        'link_type' => 'url',
+        'url' => '/a',
+        'label' => 'A',
+        'parent_id' => $other->id,
+    ])->assertSessionHasErrors([
+        'parent_id' => __('cms::validation.menu_item_has_children'),
+    ]);
+
+    expect($parent->refresh()->parent_id)->toBeNull();
+});
+
+test('a new menu item goes at the end of its menu', function (): void {
+    $menu = Menu::forKey('main');
+    $menu->items()->create([
+        'url' => '/a',
+        'label' => 'A',
+        'sort_order' => 7,
+    ]);
+
+    $this->post(route('cms.menu-items.store', $menu), [
+        'link_type' => 'url',
+        'url' => '/b',
+        'label' => 'B',
+    ])->assertRedirect(route('cms.menus.index'));
+
+    expect(MenuItem::query()
+        ->where('label', 'B')
+        ->value('sort_order'))->toBe(8);
+});

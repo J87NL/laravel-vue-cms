@@ -34,9 +34,6 @@ return [
         'visible' => 'Zichtbaar',
         'hidden' => 'Verborgen (de pagina of een pagina erboven is niet gepubliceerd)',
     ],
-    'errors' => [
-        'has_children' => 'Onder dit item staan andere items, dus het kan niet zelf onder een item staan.',
-    ],
     'actions' => [
         'create' => 'Item toevoegen',
         'save' => 'Opslaan',

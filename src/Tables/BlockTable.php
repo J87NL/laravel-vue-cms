@@ -7,7 +7,7 @@ namespace J87NL\VueCms\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use J87NL\Cms\Actions\RecordRevision;
+use J87NL\Cms\Actions\ReorderBlocks;
 use J87NL\Cms\Blocks\BlockRegistry;
 use J87NL\Cms\Blocks\ReferencesMedia;
 use J87NL\Cms\CmsPermission;
@@ -111,11 +111,9 @@ final class BlockTable extends AbstractTable
     public function performReorder(int|string $id, int|string $toId): void
     {
         app(LockedPageWrite::class)->run(auth()->user(), $this->page, function (Page $locked) use ($id, $toId): void {
-            parent::performReorder($id, $toId);
-
             $userId = auth()->id();
 
-            app(RecordRevision::class)->handle($locked, is_numeric($userId) ? (int) $userId : null);
+            app(ReorderBlocks::class)->move($locked, (int) $id, (int) $toId, is_numeric($userId) ? (int) $userId : null);
         });
     }
 

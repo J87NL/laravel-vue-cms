@@ -34,9 +34,6 @@ return [
         'visible' => 'Visible',
         'hidden' => 'Hidden (the page or a page above it is not published)',
     ],
-    'errors' => [
-        'has_children' => 'This item has items below it and cannot be placed under another item.',
-    ],
     'actions' => [
         'create' => 'Add item',
         'save' => 'Save',

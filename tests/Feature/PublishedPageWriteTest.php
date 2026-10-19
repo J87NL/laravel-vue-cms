@@ -8,6 +8,7 @@ use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Enums\PageStatus;
 use J87NL\Cms\Models\Block;
 use J87NL\Cms\Models\Page;
+use J87NL\Cms\Models\Revision;
 use J87NL\VueCms\Tables\BlockTable;
 use TranquilTools\TableBuilder\Routing\SignedTableUrl;
 
@@ -97,4 +98,26 @@ test('an editor without the publish permission cannot reorder the blocks of a pu
         'id' => $blocks[1],
         'to' => $blocks[0],
     ])->assertForbidden();
+});
+
+test('an editor reorders the blocks of a draft page and a revision is recorded', function (): void {
+    $page = pageWithBlocks(PageStatus::Draft);
+    $blocks = $page->blocks()->pluck('id')->all();
+    $revisions = Revision::query()
+        ->where('page_id', $page->id)
+        ->count();
+
+    $this->actingWithPermissions([CmsPermission::PagesEdit->value]);
+
+    $this->postJson(SignedTableUrl::make('table.reorder', BlockTable::class, [
+        'page' => $page->id,
+    ]), [
+        'id' => $blocks[1],
+        'to' => $blocks[0],
+    ])->assertSuccessful();
+
+    expect($page->blocks()->pluck('id')->all())->toBe([$blocks[1], $blocks[0]])
+        ->and(Revision::query()
+            ->where('page_id', $page->id)
+            ->count())->toBe($revisions + 1);
 });

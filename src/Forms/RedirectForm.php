@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace J87NL\VueCms\Forms;
 
-use Illuminate\Validation\Rule;
 use J87NL\Cms\Models\Redirect;
+use J87NL\Cms\Validation\RedirectRules;
 use TranquilTools\FormBuilder\AbstractForm;
 use TranquilTools\FormBuilder\Fields\BaseField;
 use TranquilTools\FormBuilder\Fields\Select;
@@ -30,20 +30,13 @@ class RedirectForm extends AbstractForm
                 ->label(__('vue-cms::redirects.fields.from_path'))
                 ->help(__('vue-cms::redirects.help.from_path'))
                 ->required()
-                ->rules([
-                    'string',
-                    'max:255',
-                ]),
+                ->rules(RedirectRules::for('from_path')),
 
             Text::make('to')
                 ->label(__('vue-cms::redirects.fields.to'))
                 ->help(__('vue-cms::redirects.help.to'))
                 ->required()
-                ->rules([
-                    'string',
-                    'max:2048',
-                    'regex:#^(/|https?://)#i',
-                ]),
+                ->rules(RedirectRules::for('to')),
 
             Select::make('status_code')
                 ->label(__('vue-cms::redirects.fields.status_code'))
@@ -57,9 +50,7 @@ class RedirectForm extends AbstractForm
                 ->optionLabel('label')
                 ->optionValue('value')
                 ->required()
-                ->rules([
-                    Rule::in(array_map('strval', Redirect::STATUS_CODES)),
-                ]),
+                ->rules(RedirectRules::for('status_code')),
 
             Submit::make()->label(__('vue-cms::redirects.actions.save')),
         ];

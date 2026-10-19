@@ -4,6 +4,18 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Changed
+
+- Require `j87nl/laravel-cms` `^0.2`.
+- The page and redirect forms take their validation rules from `J87NL\Cms\Validation\PageRules` and `RedirectRules`, so the admin and the MCP tools of `j87nl/laravel-cms` validate the same way.
+- Saving a menu item goes through `J87NL\Cms\Actions\SaveMenuItem` and reordering blocks through `J87NL\Cms\Actions\ReorderBlocks`. The error for a menu item with items below it is now `cms::validation.menu_item_has_children`.
+
+### Removed
+
+- The translation key `vue-cms::menus.errors.has_children`.
+
 ## [0.1.0]
 
 First release, extracted from the j87.nl app.
@@ -16,5 +28,6 @@ First release, extracted from the j87.nl app.
 - Media, menus, redirects with CSV import, and site settings.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
-[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/J87NL/laravel-vue-cms/releases/tag/v0.1.0

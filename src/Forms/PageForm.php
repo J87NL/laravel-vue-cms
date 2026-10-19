@@ -7,6 +7,7 @@ namespace J87NL\VueCms\Forms;
 use Illuminate\Validation\Rule;
 use J87NL\Cms\Media\MediaOptions;
 use J87NL\Cms\Models\Page;
+use J87NL\Cms\Validation\PageRules;
 use J87NL\VueCms\Support\PageOptions;
 use TranquilTools\FormBuilder\AbstractForm;
 use TranquilTools\FormBuilder\Fields\BaseField;
@@ -67,19 +68,12 @@ class PageForm extends AbstractForm
                     Text::make('title')
                         ->label(__('vue-cms::pages.fields.title'))
                         ->required()
-                        ->rules([
-                            'string',
-                            'max:160',
-                        ]),
+                        ->rules(PageRules::for('title')),
 
                     Text::make('slug')
                         ->label(__('vue-cms::pages.fields.slug'))
                         ->help(__('vue-cms::pages.help.slug'))
-                        ->rules([
-                            'nullable',
-                            'string',
-                            'max:120',
-                        ]),
+                        ->rules(PageRules::for('slug')),
 
                     Select::make('parent_id')
                         ->label(__('vue-cms::pages.fields.parent_id'))
@@ -87,20 +81,12 @@ class PageForm extends AbstractForm
                         ->optionLabel('label')
                         ->optionValue('value')
                         ->searchable()
-                        ->rules([
-                            'nullable',
-                            'integer',
-                            Rule::exists((new Page)->getTable(), 'id'),
-                        ]),
+                        ->rules(PageRules::for('parent_id')),
 
                     Text::make('menu_title')
                         ->label(__('vue-cms::pages.fields.menu_title'))
                         ->help(__('vue-cms::pages.help.menu_title'))
-                        ->rules([
-                            'nullable',
-                            'string',
-                            'max:80',
-                        ]),
+                        ->rules(PageRules::for('menu_title')),
                 ]),
 
             Section::make()
@@ -110,11 +96,7 @@ class PageForm extends AbstractForm
                 ->fields([
                     Text::make('meta_title')
                         ->label(__('vue-cms::pages.fields.meta_title'))
-                        ->rules([
-                            'nullable',
-                            'string',
-                            'max:160',
-                        ]),
+                        ->rules(PageRules::for('meta_title')),
 
                     Select::make('og_image_id')
                         ->label(__('vue-cms::pages.fields.og_image_id'))
@@ -122,28 +104,16 @@ class PageForm extends AbstractForm
                         ->optionLabel('label')
                         ->optionValue('value')
                         ->searchable()
-                        ->rules([
-                            'nullable',
-                            'integer',
-                            MediaOptions::existsRule(),
-                        ]),
+                        ->rules(PageRules::for('og_image_id')),
 
                     Textarea::make('meta_description')
                         ->label(__('vue-cms::pages.fields.meta_description'))
                         ->columnSpanFull()
-                        ->rules([
-                            'nullable',
-                            'string',
-                            'max:320',
-                        ]),
+                        ->rules(PageRules::for('meta_description')),
 
                     Text::make('canonical_url')
                         ->label(__('vue-cms::pages.fields.canonical_url'))
-                        ->rules([
-                            'nullable',
-                            'url:https,http',
-                            'max:2048',
-                        ]),
+                        ->rules(PageRules::for('canonical_url')),
 
                     Select::make('schema_type')
                         ->label(__('vue-cms::pages.fields.schema_type'))
@@ -158,9 +128,7 @@ class PageForm extends AbstractForm
                     Toggle::make('noindex')
                         ->label(__('vue-cms::pages.fields.noindex'))
                         ->help(__('vue-cms::pages.help.noindex'))
-                        ->rules([
-                            'boolean',
-                        ]),
+                        ->rules(PageRules::for('noindex')),
                 ]),
         ];
     }
