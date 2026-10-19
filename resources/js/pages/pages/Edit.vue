@@ -40,6 +40,7 @@ const props = defineProps<{
         unpublishBlockedReason: string | null;
         publishAt: string | null;
         unpublishAt: string | null;
+        scheduleError: string | null;
         scheduleForm: FormSchema | null;
     };
     previewUrl: string;
@@ -242,6 +243,18 @@ async function destroy(): Promise<void> {
                 {{
                     $t('vue-cms::pages.publication.unpublish_at', {
                         moment: moment(publication.unpublishAt),
+                    })
+                }}
+            </p>
+
+            <p
+                v-if="publication.scheduleError"
+                :class="ui.notice"
+                data-test="schedule-error"
+            >
+                {{
+                    $t('vue-cms::pages.publication.schedule_error', {
+                        reason: publication.scheduleError,
                     })
                 }}
             </p>

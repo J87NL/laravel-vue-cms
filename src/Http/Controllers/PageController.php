@@ -137,6 +137,7 @@ class PageController extends Controller
                 'unpublishBlockedReason' => ChangePageStatus::unpublishBlockedReason($page),
                 'publishAt' => $page->publish_at?->toIso8601String(),
                 'unpublishAt' => $page->unpublish_at?->toIso8601String(),
+                'scheduleError' => $page->schedule_error,
                 'scheduleForm' => $canPublish
                     ? SchedulePageForm::make($page)
                         ->action(route('cms.pages.schedule', $page))

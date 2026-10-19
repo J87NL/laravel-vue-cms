@@ -6,9 +6,11 @@ namespace J87NL\VueCms\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use J87NL\Cms\Actions\SaveSiteSettings;
+use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Models\SiteSettings;
 use J87NL\VueCms\Forms\SettingsForm;
 
@@ -27,7 +29,7 @@ class SettingsController extends Controller
                     'href' => route('cms.settings.edit'),
                 ],
             ],
-            'backUrl' => route('cms.pages.index'),
+            'backUrl' => Gate::allows(CmsPermission::PagesEdit->value) ? route('cms.pages.index') : null,
             'form' => SettingsForm::make()
                 ->action(route('cms.settings.update'))
                 ->method('PUT')

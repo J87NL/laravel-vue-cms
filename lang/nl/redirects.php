@@ -15,8 +15,8 @@ return [
     ],
     'import' => [
         'title' => 'CSV importeren',
-        'description' => 'Eén doorverwijzing per regel: oud adres, nieuw adres en eventueel de statuscode (301 of 302). Een bestaande doorverwijzing vanaf hetzelfde oude adres wordt bijgewerkt.',
-        'failed_lines' => ':count regels zijn niet geïmporteerd. :lines',
+        'description' => 'Eén doorverwijzing per regel: oud adres, nieuw adres en eventueel de statuscode (301 of 302). Een bestaande doorverwijzing vanaf hetzelfde oude adres wordt bijgewerkt. Bevat een regel een fout, dan wordt niets geïmporteerd.',
+        'failed_lines' => 'Er is niets geïmporteerd: :count regels bevatten een fout. Pas het bestand aan en importeer het opnieuw. :lines',
     ],
     'fields' => [
         'from_path' => 'Oud adres',

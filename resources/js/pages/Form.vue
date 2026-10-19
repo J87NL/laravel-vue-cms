@@ -10,7 +10,7 @@ const props = defineProps<{
     title: string;
     description?: string | null;
     breadcrumbs: CmsBreadcrumb[];
-    backUrl: string;
+    backUrl?: string | null;
     form: FormSchema;
     preview?: {
         url: string | null;
@@ -32,7 +32,7 @@ useBreadcrumbs(() => props.breadcrumbs);
                 <p v-if="description" :class="ui.muted">{{ description }}</p>
             </div>
 
-            <Link :href="backUrl" :class="ui.button">
+            <Link v-if="backUrl" :href="backUrl" :class="ui.button">
                 {{ $t('vue-cms::common.back') }}
             </Link>
         </div>

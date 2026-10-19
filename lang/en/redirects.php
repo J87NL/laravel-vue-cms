@@ -15,8 +15,8 @@ return [
     ],
     'import' => [
         'title' => 'Import CSV',
-        'description' => 'One redirect per line: old address, new address and optionally the status code (301 or 302). An existing redirect from the same old address is updated.',
-        'failed_lines' => ':count lines were not imported. :lines',
+        'description' => 'One redirect per line: old address, new address and optionally the status code (301 or 302). An existing redirect from the same old address is updated. If any line contains an error, nothing is imported.',
+        'failed_lines' => 'Nothing was imported: :count lines contain an error. Fix the file and import it again. :lines',
     ],
     'fields' => [
         'from_path' => 'Old address',

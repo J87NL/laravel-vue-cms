@@ -25,7 +25,8 @@ test('an admin adds, edits and deletes a redirect', function (): void {
         'status_code' => '302',
     ])->assertRedirect(route('cms.redirects.index'));
 
-    $redirect = Redirect::query()->sole();
+    $redirect = Redirect::query()
+        ->sole();
 
     expect($redirect)
         ->from_path->toBe('oud')
@@ -54,10 +55,10 @@ test('an admin adds, edits and deletes a redirect', function (): void {
 
     $this->delete(route('cms.redirects.destroy', $redirect))->assertRedirect(route('cms.redirects.index'));
 
-    expect(Redirect::query()->count())->toBe(0);
+    $this->assertDatabaseCount('cms_redirects', 0);
 });
 
-test('a csv upload imports redirects and reports failed lines', function (): void {
+test('a csv upload with a failed line imports nothing and reports it', function (): void {
     $this->actingWithPermissions([CmsPermission::Redirects->value]);
 
     $this->get(route('cms.redirects.import'), $this->inertiaHeaders())->assertOk();
@@ -70,7 +71,5 @@ test('a csv upload imports redirects and reports failed lines', function (): voi
         ->assertRedirect(route('cms.redirects.index'))
         ->assertSessionHasErrors('import');
 
-    expect(Redirect::query()->pluck('to', 'from_path')->all())->toBe([
-        'a' => '/b',
-    ]);
+    expect(redirectTargets())->toBe([]);
 });

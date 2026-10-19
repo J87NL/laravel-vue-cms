@@ -70,6 +70,7 @@ return [
         'schedule' => 'Plannen',
         'publish_at' => 'Gaat online op :moment.',
         'unpublish_at' => 'Gaat offline op :moment.',
+        'schedule_error' => 'De geplande wijziging is niet uitgevoerd: :reason Pas de planning aan of los het op, dan probeert het systeem het elke minuut opnieuw.',
         'write_requires_publish' => 'Deze pagina is gepubliceerd. Voor wijzigen heb je het recht "Pagina\'s publiceren" nodig.',
         'move_requires_publish' => 'Voor het verplaatsen van een gepubliceerde pagina heb je het recht "Pagina\'s publiceren" nodig.',
     ],

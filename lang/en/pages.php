@@ -70,6 +70,7 @@ return [
         'schedule' => 'Schedule',
         'publish_at' => 'Goes online on :moment.',
         'unpublish_at' => 'Goes offline on :moment.',
+        'schedule_error' => 'The scheduled change was not carried out: :reason Change the schedule or fix the cause, and it is retried every minute.',
         'write_requires_publish' => 'This page is published. Changing it requires the "Publish pages" permission.',
         'move_requires_publish' => 'Moving a published page requires the "Publish pages" permission.',
     ],

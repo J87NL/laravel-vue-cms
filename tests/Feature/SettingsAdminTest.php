@@ -35,8 +35,9 @@ test('an admin saves the site settings', function (): void {
         ->siteName()->toBe('Johan Montenij')
         ->entity_type->toBe(EntityType::Organization)
         ->sameAs()->toBe(['https://github.com/J87NL'])
-        ->privacy_page_id->toBe($privacy->id)
-        ->and(SiteSettings::query()->count())->toBe(1);
+        ->privacy_page_id->toBe($privacy->id);
+
+    $this->assertDatabaseCount('cms_settings', 1);
 });
 
 test('profile links must be full web addresses', function (): void {
@@ -48,3 +49,20 @@ test('profile links must be full web addresses', function (): void {
         'entity_same_as' => 'javascript:alert(1)',
     ])->assertSessionHasErrors('entity_same_as');
 });
+
+test('the back button only shows for users who may open the pages', function (array $permissions, bool $hasBackUrl): void {
+    $this->actingWithPermissions($permissions);
+
+    $backUrl = $this->get(route('cms.settings.edit'), $this->inertiaHeaders())
+        ->assertOk()
+        ->json('props.backUrl');
+
+    expect(is_null($backUrl))->toBe(! $hasBackUrl);
+
+    if ($hasBackUrl) {
+        $this->get($backUrl, $this->inertiaHeaders())->assertOk();
+    }
+})->with([
+    'settings only' => [[CmsPermission::Settings->value], false],
+    'settings and pages' => [[CmsPermission::Settings->value, CmsPermission::PagesEdit->value], true],
+]);

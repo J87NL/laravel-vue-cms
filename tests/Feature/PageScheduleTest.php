@@ -59,3 +59,15 @@ test('a schedule in the past is refused', function (): void {
         'publish_at' => now()->subDay()->format('Y-m-d H:i:s'),
     ])->assertSessionHasErrors('publish_at');
 });
+
+test('the editor shows why a scheduled change was refused', function (): void {
+    $page = makePage();
+    $page->schedule_error = 'The home page cannot go offline.';
+    $page->save();
+
+    $this->actingWithPermissions([CmsPermission::PagesEdit->value]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.publication.scheduleError', 'The home page cannot go offline.');
+});

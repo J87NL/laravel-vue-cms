@@ -49,7 +49,17 @@ resolve: async (name) => {
 },
 ```
 
-Add `"@cms/*": ["./vendor/j87nl/laravel-vue-cms/resources/js/*"]` to the `paths` in `tsconfig.json`, and add the package's `.vue` files to Tailwind's sources so their classes are generated.
+Add `"@cms/*": ["./vendor/j87nl/laravel-vue-cms/resources/js/*"]` to the `paths` in `tsconfig.json`, and add the package's `.vue` files to Tailwind's sources so their classes are generated:
+
+```css
+@source '../../vendor/j87nl/laravel-vue-cms/resources/js/**/*.vue';
+```
+
+### Host app contract
+
+- **Confirm dialog:** the package never uses `window.confirm`. Provide a promise-based confirm function from your layout: `provide('confirm', (message: string) => Promise<boolean>)`. Without it every confirmation resolves to `false`, so destructive actions do nothing.
+- **Breadcrumbs:** pages set a `breadcrumbs` layout prop through `setLayoutProps`. Your admin layout reads it and renders the trail.
+- **Translations:** strings use `vue-cms::` keys through `laravel-vue-i18n`. Make the package's `lang` directory available to the i18n Vite plugin, for example with a `lang/vendor/vue-cms` symlink to `vendor/j87nl/laravel-vue-cms/lang`.
 
 ### Navigation and permissions
 
