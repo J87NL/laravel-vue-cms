@@ -1,8 +1,11 @@
 # Blocks
 
 A page is built from blocks, shown from top to bottom. The block types, their fields, their validation and their
-rendering all come from the block registry of `j87nl/laravel-cms`. This package shows them in the page editor.
-See the laravel-cms documentation for how to register a block type.
+rendering all come from the block registry of `j87nl/laravel-cms`. This package shows them in the page editor. For the
+built-in types and the registry, see [Blocks](https://github.com/J87NL/laravel-cms/blob/main/docs/blocks.md) in the
+laravel-cms docs. To add your own type, see
+[Custom block types](https://github.com/J87NL/laravel-cms/blob/main/docs/custom-blocks.md). A registered type gets an
+add button and a form in the admin.
 
 All block routes need the `cms.pages.edit` permission and write access to the page. See
 [Permissions](../permissions.md#changing-a-published-page).
@@ -39,7 +42,8 @@ The form is `J87NL\VueCms\Forms\BlockForm`: the `fields()` of the block type plu
 action of laravel-cms.
 
 An unknown type key, or a type listed in `cms.blocks.disabled`, answers `404` on the create, store, edit and update
-routes.
+routes. See
+[Disabling block types](https://github.com/J87NL/laravel-cms/blob/main/docs/blocks.md#disabling-block-types).
 
 ## Editing a block
 

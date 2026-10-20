@@ -1,7 +1,9 @@
 # Menus
 
 The menus screen edits the items of every menu the site has. Which menus exist is set in laravel-cms with the
-`cms.menus` config key (the menu keys, such as `main` and `footer`).
+`cms.menus` config key (the menu keys, such as `main` and `footer`). How menus are stored, when an item shows and how a
+menu is rendered is described in [Menus](https://github.com/J87NL/laravel-cms/blob/main/docs/menus.md) in the
+laravel-cms docs.
 
 All menu routes need the `cms.menus` permission.
 
@@ -36,13 +38,14 @@ The rows can be dragged into a new order, which updates `sort_order`. Each row h
 The form help describes a safe link as a path such as `/contact`, or an address starting with `https://`,
 `mailto:` or `tel:`.
 
-Saving posts to `cms.menu-items.store`, or sends `PUT` to `cms.menu-items.update`. Both go through the
-`SaveMenuItem` action of laravel-cms. A new item goes at the end of its menu. An item that has items below it
-cannot be placed under another item; the error is `cms::validation.menu_item_has_children`.
+Saving posts to `cms.menu-items.store`, or sends `PUT` to `cms.menu-items.update`. Both go through the `SaveMenuItem`
+action of laravel-cms, which enforces the two menu levels, see
+[Menu items](https://github.com/J87NL/laravel-cms/blob/main/docs/menus.md#menu-items). A new item goes at the end of its
+menu.
 
 ## Deleting
 
 Delete asks for confirmation and sends `DELETE` to `cms.menu-items.destroy`. The items below the deleted item are
-deleted with it.
+deleted with it, see [Menu items](https://github.com/J87NL/laravel-cms/blob/main/docs/menus.md#menu-items).
 
 The item routes use scoped bindings: an item of another menu answers `404`.

@@ -1,8 +1,8 @@
 - [Introduction](index.md)
 - [Installation](installation.md)
 - [Configuration](configuration.md)
-- [Host App Contract](host-app-contract.md)
-- Admin Screens
+- [Host app contract](host-app-contract.md)
+- Admin screens
     - [Pages](screens/pages.md)
     - [Blocks](screens/blocks.md)
     - [Publication](screens/publication.md)
@@ -10,10 +10,10 @@
     - [Media](screens/media.md)
     - [Menus](screens/menus.md)
     - [Redirects](screens/redirects.md)
-    - [Site Settings](screens/settings.md)
+    - [Site settings](screens/settings.md)
 - Front-end
-    - [Vue Pages](frontend/vue-pages.md)
-    - [Composables and Types](frontend/composables.md)
+    - [Vue pages](frontend/vue-pages.md)
+    - [Composables and types](frontend/composables.md)
 - Reference
     - [Routes](routes.md)
     - [Permissions](permissions.md)
@@ -22,3 +22,5 @@
     - [Translations](translations.md)
     - [Security](security.md)
     - [Testing](testing.md)
+- Related
+    - [laravel-cms (core)](https://github.com/J87NL/laravel-cms/blob/main/docs/index.md)

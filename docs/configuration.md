@@ -8,6 +8,10 @@ php artisan vendor:publish --tag=vue-cms-config
 
 This creates `config/vue-cms.php`. The package reads no environment variables.
 
+This file only holds the settings of the admin. The content model, the public website and the MCP tools are set in
+`config/cms.php` of laravel-cms, see its
+[configuration](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md).
+
 ## Admin routes
 
 ```php
@@ -86,13 +90,12 @@ with no value. The value is used as both the option value and its label.
 
 ## Settings read from laravel-cms
 
-A few screens read the config of `j87nl/laravel-cms` (`config/cms.php`):
+A few screens read the config of `j87nl/laravel-cms` (`config/cms.php`). Change these keys there:
 
 | Key | Used for |
 |---|---|
-| `cms.menus` | The menus shown on the [Menus](screens/menus.md) screen |
-| `cms.media.max_upload_kilobytes` | The maximum upload size on the [Media](screens/media.md) screen. Falls back to `10240` when missing. |
-| `cms.preview.minutes` | How long the preview link on the page editor stays valid, see [Publication](screens/publication.md#preview) |
-| `cms.blocks.disabled` | Disabled block types get no add button, and their create, store, edit and update routes answer `404`. Existing blocks of a disabled type stay in the [Blocks](screens/blocks.md) list with the raw type key and no edit link. |
-
-See the laravel-cms documentation for those keys.
+| [`cms.menus`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#blocks-and-menus) | The menus shown on the [Menus](screens/menus.md) screen |
+| [`cms.media.max_upload_kilobytes`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#media) | The maximum upload size on the [Media](screens/media.md) screen. Falls back to `10240` when missing. The core itself does not read this key. |
+| [`cms.preview.minutes`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#preview-and-scheduling) | How long the preview link on the page editor stays valid, see [Publication](screens/publication.md#preview) |
+| [`cms.blocks.disabled`](https://github.com/J87NL/laravel-cms/blob/main/docs/blocks.md#disabling-block-types) | Disabled block types get no add button, and their create, store, edit and update routes answer `404`. Existing blocks of a disabled type stay in the [Blocks](screens/blocks.md) list with the raw type key and no edit link. |
+| [`cms.rich_text.*`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#rich-text) | The editor key and options of the rich text fields in the block forms, see [Installation](installation.md) |

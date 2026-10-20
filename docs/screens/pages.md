@@ -1,7 +1,8 @@
 # Pages
 
 The pages screen shows all CMS pages as a tree. The page editor holds the page fields, the blocks, the
-publication actions and the revisions of one page.
+publication actions and the revisions of one page. The rules behind them, such as paths, statuses and the home
+page, belong to laravel-cms, see [Pages](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md) in its docs.
 
 All page routes need the `cms.pages.edit` permission. See [Permissions](../permissions.md).
 
@@ -21,7 +22,8 @@ Users with `cms.pages.edit` can drag a node above, below or onto another node. T
 | `target` | Required, the id of an existing page |
 | `position` | Required, one of `before`, `after` or `inside` |
 
-The move runs through the `MovePage` action of laravel-cms, which changes the parent and recomputes the paths.
+The move runs through the `MovePage` action of laravel-cms, see
+[Moving pages](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#moving-pages).
 
 A published page can only be moved by a user who also has `cms.pages.publish`. The tree knows this up front: a
 node carries a `moveBlockedReason`, and the page shows that reason instead of posting. Users without
@@ -31,11 +33,13 @@ node carries a `moveBlockedReason`, and the page shows that reason instead of po
 
 `GET admin/cms/pages/create` (`cms.pages.create`) shows the page form. Saving posts to `cms.pages.store`. The
 `SavePage` action of laravel-cms stores the page as a draft, and the browser goes to the editor of the new page.
+See [Creating and updating](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#creating-and-updating).
 
 ## Page form
 
 `J87NL\VueCms\Forms\PageForm` holds two sections. The validation rules of every field except `schema_type` come
-from `J87NL\Cms\Validation\PageRules`, the same rules the laravel-cms MCP tools use.
+from `J87NL\Cms\Validation\PageRules`, the same rules the laravel-cms MCP tools use. What each field does is
+described in [Fields](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#fields).
 
 | Section | Field | Notes |
 |---|---|---|
@@ -69,8 +73,9 @@ save button. This happens for a published page when the user lacks `cms.pages.pu
 
 ## Deleting a page
 
-The "Delete page" button asks for confirmation and sends `DELETE` to `cms.pages.destroy`. The `DeletePage` action
-of laravel-cms removes the page, its blocks and its revisions.
+The "Delete page" button asks for confirmation and sends `DELETE` to `cms.pages.destroy`. The `DeletePage` action of
+laravel-cms removes the page and what belongs to it, see
+[Deleting pages](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#deleting-pages).
 
 The button is disabled, with the reason shown, when:
 

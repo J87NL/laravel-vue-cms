@@ -1,7 +1,8 @@
 # Media
 
 The media screen lists the images of the site, uploads new ones and edits their alt text, caption and focal
-point. The images themselves are stored by `j87nl/laravel-cms`.
+point. The images themselves are stored by `j87nl/laravel-cms`. For how it cleans, stores, converts and counts
+images, see [Media](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md) in the laravel-cms docs.
 
 All media routes need the `cms.media` permission.
 
@@ -20,7 +21,8 @@ All media routes need the `cms.media` permission.
 The search box searches `alt` and `caption`.
 
 Each row has the actions Edit and Delete. Delete asks for confirmation. It is disabled while the image is in use,
-and the `DeleteMedia` action of laravel-cms refuses it as well.
+and the `DeleteMedia` action of laravel-cms refuses it as well. What counts as a use is listed in
+[Deleting](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#deleting).
 
 ## Uploading
 
@@ -36,12 +38,11 @@ and the `DeleteMedia` action of laravel-cms refuses it as well.
 | `focal_y` | Required integer from 0 to 100, default 50 |
 
 The file picker offers `image/jpeg`, `image/png`, `image/webp` and `image/gif`. The form does not check the type
-itself. laravel-cms does when it stores the upload: its `ImageCleaner` refuses other types, animated GIFs,
-unreadable images and images over `cms.media.max_pixels` (default 40,000,000 pixels). A refused upload leaves no
-media row behind.
+itself. The `UploadMedia` action does, with a validation error on `file`. What it refuses is listed in
+[Uploading](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#uploading).
 
-The focal point is the part of the image that must stay visible when it is cropped, as a percentage from the
-left (`focal_x`) and from the top (`focal_y`).
+The focal point is the part of the image that must stay visible when it is cropped, see
+[Fields](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#fields).
 
 ## Editing
 

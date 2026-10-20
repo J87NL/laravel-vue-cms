@@ -13,9 +13,13 @@ see the buttons disabled, with a notice that explains why. See [Permissions](../
 | Publish | `POST` `cms.pages.publish` | `ChangePageStatus` sets the status to `published` |
 | Take offline | `POST` `cms.pages.unpublish` | `ChangePageStatus` sets the status to `unpublished` |
 
+The statuses, and when a page is public, are described in
+[Statuses](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#statuses) in the laravel-cms docs.
+
 "Publish" shows for a page that is not published, "Take offline" for a published page.
 
-"Take offline" is disabled, with the reason shown, for the home page and for the pages above it.
+"Take offline" is disabled, with the reason shown, for the home page and for the pages above it. The rules of the
+home page are listed in [The home page](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#the-home-page).
 
 ## Home page
 
@@ -34,17 +38,17 @@ Users with `cms.pages.publish` see a schedule form, `J87NL\VueCms\Forms\Schedule
 | `unpublish_at` | Always | The page goes offline by itself at this moment |
 
 Both fields are optional dates, entered in the browser's timezone. An empty field clears that moment. The
-`SchedulePage` action of laravel-cms refuses a moment in the past.
+`SchedulePage` action of laravel-cms checks the moments, for example it refuses a moment in the past. See
+[Planning a change](https://github.com/J87NL/laravel-cms/blob/main/docs/scheduling.md#planning-a-change).
 
 The panel shows the planned moments in the user's locale. When laravel-cms could not carry out a planned
-change, the panel shows the stored `schedule_error`. The change is retried every minute until the schedule or the
-cause is fixed.
+change, the panel shows the stored `schedule_error`.
 
-The planned changes themselves are carried out by laravel-cms. See the laravel-cms documentation for its
-scheduler.
+The planned changes themselves are carried out by the `cms:publish-scheduled` command of laravel-cms, which needs
+the Laravel scheduler. See [Scheduling](https://github.com/J87NL/laravel-cms/blob/main/docs/scheduling.md).
 
 ## Preview
 
 The "Preview" link opens the page in a new tab, also when it is not published. The link is a temporary signed
-URL made by the `PreviewController` of laravel-cms. Its lifetime is `cms.preview.minutes`, 60 minutes when the key
-is missing.
+URL made by the `PreviewController` of laravel-cms. Its lifetime and what a preview renders are described in
+[Previews](https://github.com/J87NL/laravel-cms/blob/main/docs/previews.md).

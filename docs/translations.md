@@ -15,8 +15,9 @@ The package ships English (`en`) and Dutch (`nl`) translations in its `lang` fol
 | `revisions.php` | The revision list |
 | `settings.php` | The site settings |
 
-Some messages come from laravel-cms and use its `cms::` namespace, such as the validation errors of its actions
-and the labels of its enums.
+Some messages come from laravel-cms and use its `cms::` namespace, such as the validation errors of its actions and the
+labels of its enums. Its files are listed in
+[Translations](https://github.com/J87NL/laravel-cms/blob/main/docs/rendering.md#translations) in the laravel-cms docs.
 
 ## On the server
 

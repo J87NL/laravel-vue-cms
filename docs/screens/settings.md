@@ -1,8 +1,9 @@
 # Site settings
 
-The settings screen edits the site-wide details of laravel-cms: the site name, the default texts for search
-engines, who is behind the site and the extra lines for `robots.txt` and `llms.txt`. laravel-cms stores them in
-its `SiteSettings` model and uses them on every page.
+The settings screen edits the site-wide details of laravel-cms: the site name, the default texts for search engines, who
+is behind the site and the extra lines for `robots.txt` and `llms.txt`. laravel-cms stores them in its `SiteSettings`
+model and uses them on every page. What each field does on the site, and its fallback, is described in
+[Site settings](https://github.com/J87NL/laravel-cms/blob/main/docs/site-settings.md) in the laravel-cms docs.
 
 The routes need the `cms.settings` permission.
 
@@ -37,7 +38,8 @@ The back button links to the page tree, and only shows for users with `cms.pages
 | `entity_image_id` | An existing media item | Photo or logo |
 | `entity_same_as` | At most 4000 characters | One full address per line, such as a LinkedIn or GitHub profile |
 
-laravel-cms checks that every line of `entity_same_as` is a full web address.
+The `SaveSiteSettings` action of laravel-cms also checks that every line of `entity_same_as` is a full web
+address, see [Saving](https://github.com/J87NL/laravel-cms/blob/main/docs/site-settings.md#saving).
 
 ### Search engines and AI
 

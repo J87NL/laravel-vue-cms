@@ -1,7 +1,8 @@
 # Revisions
 
-laravel-cms keeps a revision of a page when the page or its blocks are saved. The page editor lists them and
-can restore one.
+laravel-cms keeps a revision of a page when the page or its blocks change. The page editor lists them and
+can restore one. What a revision holds, and which changes record one, is described in
+[Revisions](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md) in the laravel-cms docs.
 
 ## Revision list
 
@@ -14,13 +15,14 @@ can restore one.
 | Title | The page title in the revision |
 | Blocks | The number of blocks in the revision |
 
-How many revisions are kept is set in laravel-cms.
+How many revisions are kept is set with `cms.revisions.keep` in laravel-cms, see
+[Pruning](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md#pruning).
 
 ## Restoring
 
 Each row has a "Restore" action that asks for confirmation and posts to `cms.revisions.restore`. The
 `RestoreRevision` action of laravel-cms replaces the page fields and blocks. The publication status stays as it
-is.
+is. See [Restoring](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md#restoring).
 
 The action is disabled:
 

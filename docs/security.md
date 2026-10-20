@@ -1,5 +1,9 @@
 # Security
 
+This page covers the admin. The security of the public website, the stored content and the MCP tools belongs to
+laravel-cms, see its [Security](https://github.com/J87NL/laravel-cms/blob/main/docs/security.md) page. That includes the
+rich text sanitizer, the security headers and the link and upload checks the admin relies on.
+
 ## Authentication and permissions
 
 Every admin route runs behind `vue-cms.admin.middleware` (default `web` and `auth`) and a `can:` check for one of
@@ -56,13 +60,16 @@ These checks need a logged-in user inside the TableBuilder routes. Set `table-bu
 
 ## Links and uploads
 
-- Menu item links must pass the `SafeLink` rule of laravel-cms.
-- Uploads are limited to `cms.media.max_upload_kilobytes`. laravel-cms only stores JPEG, PNG, WebP and GIF images,
-  and refuses animated GIFs and images over its pixel limit.
+- Menu item links must pass the `SafeLink` rule of laravel-cms, see
+  [Links](https://github.com/J87NL/laravel-cms/blob/main/docs/security.md#links).
+- Uploads are limited to `cms.media.max_upload_kilobytes`. laravel-cms checks and cleans the image itself: it refuses
+  other types than JPEG, PNG, WebP and GIF, animated GIFs and images over its pixel limit. See
+  [Uploading](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#uploading).
 - The CSV import only accepts `csv` and `txt` files up to 1024 KB.
 - The media thumbnail in the list escapes its URL, alt text and object position.
 
 ## Preview links
 
-The preview link on the page editor is a temporary signed URL from laravel-cms. Anyone who has the link can see
-the page until it expires, also when the page is not published.
+The preview link on the page editor is a temporary signed URL from laravel-cms. Anyone who has the link can see the page
+until it expires, also when the page is not published. See
+[Previews](https://github.com/J87NL/laravel-cms/blob/main/docs/previews.md).
