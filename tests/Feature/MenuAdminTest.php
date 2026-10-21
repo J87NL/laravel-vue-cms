@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Gate;
+use J87NL\Cms\Actions\DeleteMenuItem;
 use J87NL\Cms\Cache\PageCache;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Enums\PageStatus;
@@ -175,8 +176,42 @@ test('deleting a menu item also deletes the items below it', function (): void {
     $parent = $menu->items()->create(['url' => '/parent', 'label' => 'Parent']);
     $menu->items()->create(['url' => '/child', 'label' => 'Child', 'parent_id' => $parent->id]);
 
+    $this->partialMock(DeleteMenuItem::class, fn ($mock) => $mock->shouldReceive('handle')
+        ->once()
+        ->passthru());
+
     $this->delete(route('cms.menu-items.destroy', [$menu, $parent]))
         ->assertRedirect(route('cms.menus.index'));
 
     expect(MenuItem::query()->count())->toBe(0);
 });
+
+test('reordering refuses an item of another menu or a malformed id and changes nothing', function (Closure $ids): void {
+    $main = Menu::forKey('main');
+    $footer = Menu::forKey('footer');
+    $first = $main->items()->create(['url' => '/one', 'label' => 'One', 'sort_order' => 1]);
+    $second = $main->items()->create(['url' => '/two', 'label' => 'Two', 'sort_order' => 2]);
+    $other = $footer->items()->create(['url' => '/other', 'label' => 'Other', 'sort_order' => 1]);
+
+    [$id, $to] = $ids($first, $second, $other);
+
+    $this->postJson(SignedTableUrl::make('table.reorder', MenuItemTable::class, [
+        'menu' => $main->id,
+    ]), [
+        'id' => $id,
+        'to' => $to,
+    ])->assertStatus(422)->assertJsonValidationErrors('id');
+
+    expect(MenuItem::query()
+        ->orderBy('id')
+        ->pluck('sort_order', 'id')
+        ->all())->toBe([
+            $first->id => 1,
+            $second->id => 2,
+            $other->id => 1,
+        ]);
+})->with([
+    'item of another menu' => [fn (MenuItem $first, MenuItem $second, MenuItem $other): array => [$other->id, $first->id]],
+    'target of another menu' => [fn (MenuItem $first, MenuItem $second, MenuItem $other): array => [$first->id, $other->id]],
+    'malformed id' => [fn (MenuItem $first, MenuItem $second, MenuItem $other): array => [sprintf('%dabc', $second->id), $first->id]],
+]);

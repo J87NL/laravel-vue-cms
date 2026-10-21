@@ -6,6 +6,7 @@ namespace J87NL\VueCms\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use J87NL\Cms\Actions\ReorderMenuItems;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Models\Menu;
@@ -95,6 +96,10 @@ final class MenuItemTable extends AbstractTable
 
     public function performReorder(int|string $id, int|string $toId): void
     {
+        if (! ctype_digit((string) $id) || ! ctype_digit((string) $toId)) {
+            throw new InvalidArgumentException('Both menu items must be given by their id.');
+        }
+
         app(ReorderMenuItems::class)->move($this->menu, (int) $id, (int) $toId);
     }
 }

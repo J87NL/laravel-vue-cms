@@ -20,8 +20,11 @@ Each panel holds a `J87NL\VueCms\Tables\MenuItemTable`:
 | Link | The address the item points at |
 | Status | "Visible", or "Hidden" when the linked page, or a page above it, is not published |
 
-The rows can be dragged into a new order, which runs the `ReorderMenuItems` action of laravel-cms. Each row has the
-actions Edit and Delete; Delete runs the `DeleteMenuItem` action, which also deletes the items below the item.
+The rows can be dragged into a new order, which runs the `ReorderMenuItems` action of laravel-cms. The order is one
+list for the whole menu and does not look at parents: dragging an item between the items of another parent keeps its
+own parent, and below its parent it keeps its place relative to its siblings. Change the parent in the item form.
+Each row has the actions Edit and Delete; Delete runs the `DeleteMenuItem` action, which also deletes the items below
+the item.
 
 ## Menu item form
 

@@ -150,15 +150,22 @@ test('a revision of another page cannot be restored through this page', function
     $this->post(route('cms.revisions.restore', [$page, $other->revisions()->firstOrFail()]))->assertNotFound();
 });
 
-test('the editor tells how many revisions are kept', function (): void {
-    config()->set('cms.revisions.keep', 7);
+test('the editor tells how many revisions are kept', function (mixed $configured, string $locale, string $description): void {
+    config()->set('cms.revisions.keep', $configured);
+    app()->setLocale($locale);
 
     $page = makePage();
 
     $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
         ->assertOk()
-        ->assertJsonPath('props.revisionsKept', 7);
-});
+        ->assertJsonPath('props.revisionsDescription', $description);
+})->with([
+    'seven' => [7, 'en', 'Every save keeps a revision. The last 7 are kept.'],
+    'one' => [1, 'en', 'Every save keeps a revision. Only the last one is kept.'],
+    'zero keeps one' => [0, 'en', 'Every save keeps a revision. Only the last one is kept.'],
+    'null keeps one in Dutch' => [null, 'nl', 'Elke wijziging bewaart een versie. Alleen de laatste blijft bewaard.'],
+    'seven in Dutch' => [7, 'nl', 'Elke wijziging bewaart een versie. De laatste 7 blijven bewaard.'],
+]);
 
 test('a page only takes a schema type from the configured list', function (): void {
     config()->set('cms.schema_types', [

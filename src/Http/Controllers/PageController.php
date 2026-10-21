@@ -15,6 +15,7 @@ use J87NL\Cms\Actions\ChangePageStatus;
 use J87NL\Cms\Actions\DeletePage;
 use J87NL\Cms\Actions\MakeHomePage;
 use J87NL\Cms\Actions\MovePage;
+use J87NL\Cms\Actions\RecordRevision;
 use J87NL\Cms\Actions\SavePage;
 use J87NL\Cms\Blocks\BlockRegistry;
 use J87NL\Cms\CmsPermission;
@@ -128,7 +129,9 @@ class PageController extends Controller
                 array_keys($registry->all()),
             ),
             'revisions' => RevisionTable::build($page),
-            'revisionsKept' => max(1, (int) config('cms.revisions.keep', 20)),
+            'revisionsDescription' => trans_choice('vue-cms::pages.edit.revisions_description', RecordRevision::keep(), [
+                'count' => RecordRevision::keep(),
+            ]),
             'publication' => [
                 'canPublish' => $canPublish,
                 'publishUrl' => route('cms.pages.publish', $page),

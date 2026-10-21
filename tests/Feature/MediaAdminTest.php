@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use J87NL\Cms\Actions\UpdateMedia;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Models\Block;
 use J87NL\Cms\Models\MediaAsset;
@@ -108,6 +109,10 @@ test('editing an image changes its details and refuses a focal point outside the
     ])->assertSessionHasErrors('focal_x');
 
     expect($asset->fresh()->alt)->toBe('The beach');
+
+    $this->partialMock(UpdateMedia::class, fn ($mock) => $mock->shouldReceive('handle')
+        ->once()
+        ->passthru());
 
     $this->put(route('cms.media.update', $asset), [
         'alt' => 'The dunes',

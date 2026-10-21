@@ -4,12 +4,17 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Removed
+
+- The `vue-cms.schema_types` config key. The "Page type" options and their validation now come from `cms.schema_types` of laravel-cms. **Upgrade:** if your published `config/vue-cms.php` customises `schema_types`, move that list to `schema_types` in `config/cms.php` (publish it with `php artisan vendor:publish --tag=cms-config` if needed), then remove it from `config/vue-cms.php`.
+
 ### Changed
 
-- Requires `j87nl/laravel-cms` `^0.2.2`.
+- Requires `j87nl/laravel-cms` `^0.2.2`, which must be tagged first. Update both packages together: `composer update j87nl/laravel-vue-cms j87nl/laravel-cms` (or `composer update j87nl/laravel-vue-cms -W`).
 - Reordering and deleting menu items and editing an image run the `ReorderMenuItems`, `DeleteMenuItem` and `UpdateMedia` actions of laravel-cms. A menu reorder now also flushes the page cache.
-- The "Page type" options and their validation come from `cms.schema_types` of laravel-cms. `vue-cms.schema_types` is no longer read: move a customised list to `config/cms.php`.
-- The revisions panel shows the number from `cms.revisions.keep` instead of a fixed 20.
+- The revisions panel shows the number from `RecordRevision::keep()` (`cms.revisions.keep`, at least 1) instead of a fixed 20, with a singular form for 1. The page editor gets it as the `revisionsDescription` prop.
+- The image form uses the `MediaRules` of laravel-cms.
+- A menu reorder with an item of another menu or a malformed id answers `422` on `id` and changes nothing.
 - The title pattern help uses a neutral example, and the redirect import help names every header the import skips.
 - The README no longer mentions CrudBuilder, which is not a dependency.
 

@@ -20,6 +20,12 @@ block types and public website, so this one `require` installs both. It also pul
 `tranquil-tools/laravel-vue-form-builder` and `tranquil-tools/laravel-vue-table-builder`. The service provider
 `J87NL\VueCms\VueCmsServiceProvider` is auto-discovered.
 
+To upgrade, update both packages together, because a new version of this package can require a newer core:
+
+```bash
+composer update j87nl/laravel-vue-cms j87nl/laravel-cms
+```
+
 The FormBuilder and TableBuilder packages ship their own `.vue` files and have their own front-end
 dependencies. Follow their installation guides for the npm packages they need.
 
