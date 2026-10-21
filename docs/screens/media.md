@@ -1,8 +1,9 @@
 # Media
 
-The media screen lists the images of the site, uploads new ones, edits their alt text, caption and focal point,
-and replaces their file. The images themselves are stored by `j87nl/laravel-cms`. For how it cleans, stores, converts and counts
-images, see [Media](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md) in the laravel-cms docs.
+The media screen lists the images of the site, uploads new ones, edits their alt text, caption and focal point, and
+replaces their file. The images themselves are stored by `j87nl/laravel-cms`. For how it cleans, stores, converts
+and counts images, see [Media](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md) in the laravel-cms
+docs.
 
 All media routes need the `cms.media` permission.
 
