@@ -80,7 +80,7 @@ class MediaController extends Controller
             ],
             'replace' => [
                 'url' => route('cms.media.replace', $asset),
-                'accept' => MediaAsset::ACCEPTED_MIME_TYPES,
+                'accept' => MediaReplaceForm::accept(),
             ],
             'form' => MediaForm::make()
                 ->action(route('cms.media.update', $asset))

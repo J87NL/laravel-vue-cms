@@ -25,12 +25,21 @@ class MediaReplaceForm extends AbstractForm
         return [
             File::make('file')
                 ->label(__('vue-cms::media.fields.file'))
-                ->accept(MediaAsset::ACCEPTED_MIME_TYPES)
+                ->accept(self::accept())
                 ->required()
                 ->rules([
                     'file',
-                    sprintf('max:%d', (int) config('cms.media.max_upload_kilobytes', 10240)),
+                    sprintf('mimetypes:%s', implode(',', self::accept())),
+                    ...MediaUploadForm::sizeRules(),
                 ]),
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function accept(): array
+    {
+        return MediaAsset::ACCEPTED_MIME_TYPES;
     }
 }

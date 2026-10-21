@@ -207,7 +207,7 @@ test('a replacement that is not an image is refused and keeps the current file',
     expect($asset->fresh()->file()->id)->toBe($mediaId);
 });
 
-test('the edit screen offers the replacement only with the media permission', function (): void {
+test('the edit screen sends the replace url, and without the media permission the screen and the replacement are forbidden', function (): void {
     $this->post(route('cms.media.store'), [
         'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
         'alt' => 'Photo',
@@ -232,4 +232,48 @@ test('the edit screen offers the replacement only with the media permission', fu
     ])->assertForbidden();
 
     expect($asset->fresh()->file()->id)->toBe($mediaId);
+});
+
+test('a replacement above the configured size or disguised as an image is refused', function (UploadedFile $file): void {
+    config()->set('cms.media.max_upload_kilobytes', 50);
+
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+    $mediaId = $asset->file()->id;
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => $file,
+    ])->assertSessionHasErrors('file');
+
+    expect($asset->fresh()->file()->id)->toBe($mediaId);
+})->with([
+    'too large' => fn () => UploadedFile::fake()->image('big.jpg', 800, 600)->size(51),
+    'disguised' => fn () => UploadedFile::fake()->createWithContent('photo.jpg', '%PDF-1.4 not an image'),
+]);
+
+test('a max upload size of zero lets large uploads and replacements through', function (): void {
+    config()->set('cms.media.max_upload_kilobytes', 0);
+
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600)->size(20_000),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ])->assertSessionHasNoErrors();
+
+    $asset = MediaAsset::query()
+        ->sole();
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => UploadedFile::fake()->image('other.png', 640, 480)->size(20_000),
+    ])->assertSessionHasNoErrors();
+
+    expect($asset->fresh()->width())->toBe(640);
 });

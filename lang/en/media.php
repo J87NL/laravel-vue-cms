@@ -39,7 +39,7 @@ return [
         'delete' => 'Delete',
         'delete_confirm' => 'Delete this image?',
         'replace' => 'Replace file',
-        'replace_confirm' => 'Replace the current file? The old file is deleted.',
+        'replace_confirm' => 'Replace the current file? The old file is deleted, and unsaved changes in the form are lost.',
     ],
     'flash' => [
         'uploaded' => 'Image uploaded.',

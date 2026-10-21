@@ -39,7 +39,7 @@ return [
         'delete' => 'Verwijderen',
         'delete_confirm' => 'Deze afbeelding verwijderen?',
         'replace' => 'Bestand vervangen',
-        'replace_confirm' => 'Het huidige bestand vervangen? Het oude bestand wordt verwijderd.',
+        'replace_confirm' => 'Het huidige bestand vervangen? Het oude bestand wordt verwijderd, en niet opgeslagen wijzigingen in het formulier gaan verloren.',
     ],
     'flash' => [
         'uploaded' => 'Afbeelding geüpload.',
