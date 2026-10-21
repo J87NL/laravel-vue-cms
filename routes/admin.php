@@ -52,6 +52,7 @@ Route::middleware(config('vue-cms.admin.middleware'))
             Route::post('media', [MediaController::class, 'store'])->name('media.store');
             Route::get('media/{asset}/edit', [MediaController::class, 'edit'])->name('media.edit');
             Route::put('media/{asset}', [MediaController::class, 'update'])->name('media.update');
+            Route::post('media/{asset}/replace', [MediaController::class, 'replace'])->name('media.replace');
             Route::delete('media/{asset}', [MediaController::class, 'destroy'])->name('media.destroy');
         });
 

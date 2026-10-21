@@ -16,6 +16,7 @@ return [
     ],
     'sections' => [
         'focal_point' => 'Focal point',
+        'replace' => 'Replace file',
     ],
     'fields' => [
         'file' => 'Image',
@@ -29,6 +30,7 @@ return [
     'help' => [
         'alt' => 'Describe what the image shows, for visitors who cannot see it.',
         'focal_point' => 'The part of the image that must stay visible when it is cropped, as a percentage from the left and from the top.',
+        'replace' => 'Choose a new image. The alt text, caption and focal point stay, and every page that uses this image shows the new file at once.',
     ],
     'actions' => [
         'upload' => 'Upload',
@@ -36,10 +38,13 @@ return [
         'edit' => 'Edit',
         'delete' => 'Delete',
         'delete_confirm' => 'Delete this image?',
+        'replace' => 'Replace file',
+        'replace_confirm' => 'Replace the current file? The old file is deleted.',
     ],
     'flash' => [
         'uploaded' => 'Image uploaded.',
         'saved' => 'Image saved.',
         'deleted' => 'Image deleted.',
+        'replaced' => 'File replaced.',
     ],
 ];

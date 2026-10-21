@@ -45,6 +45,7 @@ One page for every screen that shows a single form.
 | `backUrl` | `string \| null` | The target of the back button. No button when empty. |
 | `form` | `FormSchema` | The FormBuilder form |
 | `preview` | `{ url: string \| null, alt: string, objectPosition: string } \| null` | An image above the form. Only the media edit screen sends it. |
+| `replace` | `{ url: string, accept: string[] } \| null` | Shows the "Replace file" section below the form, with a file picker and a button that asks for confirmation through `useConfirm` before it posts the file. Only the media edit screen sends it, and the section only shows when the user has `cms.media`. |
 
 ### cms/pages/Index
 

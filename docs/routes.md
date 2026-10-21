@@ -53,6 +53,7 @@ Permission: `cms.media`.
 | `POST` | `media` | `cms.media.store` |
 | `GET` | `media/{asset}/edit` | `cms.media.edit` |
 | `PUT` | `media/{asset}` | `cms.media.update` |
+| `POST` | `media/{asset}/replace` | `cms.media.replace` |
 | `DELETE` | `media/{asset}` | `cms.media.destroy` |
 
 ## Menus

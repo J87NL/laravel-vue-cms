@@ -1,7 +1,7 @@
 # Media
 
-The media screen lists the images of the site, uploads new ones and edits their alt text, caption and focal
-point. The images themselves are stored by `j87nl/laravel-cms`. For how it cleans, stores, converts and counts
+The media screen lists the images of the site, uploads new ones, edits their alt text, caption and focal point,
+and replaces their file. The images themselves are stored by `j87nl/laravel-cms`. For how it cleans, stores, converts and counts
 images, see [Media](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md) in the laravel-cms docs.
 
 All media routes need the `cms.media` permission.
@@ -49,6 +49,21 @@ The focal point is the part of the image that must stay visible when it is cropp
 `GET admin/cms/media/{asset}/edit` (`cms.media.edit`) shows a preview of the image and
 `J87NL\VueCms\Forms\MediaForm`, with the same `alt`, `caption`, `focal_x` and `focal_y` fields. Saving sends
 `PUT` to `cms.media.update`, which runs the `UpdateMedia` action of laravel-cms.
+
+## Replacing the file
+
+Below the form, the edit screen has a "Bestand vervangen" (replace file) section with a file picker. Its button asks
+for confirmation with the app's confirm dialog, then posts the file to `POST admin/cms/media/{asset}/replace`
+(`cms.media.replace`). The request is validated with `J87NL\VueCms\Forms\MediaReplaceForm` (a required file of at
+most `cms.media.max_upload_kilobytes`), and the `ReplaceMediaFile` action of laravel-cms stores the new file with the
+same checks as an upload. The image keeps its id, alt text, caption and focal point, so every page that uses it shows
+the new file without being changed. The old file and its conversions are deleted. See
+[Replacing the file](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#replacing-the-file).
+
+A refused file shows its error in the section and leaves the current file in place. After a replacement the screen
+opens again with a toast.
+
+There is no MCP tool to upload or replace an image; that only happens here.
 
 ## Deleting
 
