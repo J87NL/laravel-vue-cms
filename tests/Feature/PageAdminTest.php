@@ -149,3 +149,39 @@ test('a revision of another page cannot be restored through this page', function
 
     $this->post(route('cms.revisions.restore', [$page, $other->revisions()->firstOrFail()]))->assertNotFound();
 });
+
+test('the editor tells how many revisions are kept', function (): void {
+    config()->set('cms.revisions.keep', 7);
+
+    $page = makePage();
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.revisionsKept', 7);
+});
+
+test('a page only takes a schema type from the configured list', function (): void {
+    config()->set('cms.schema_types', [
+        'WebPage',
+        'AboutPage',
+    ]);
+
+    $page = makePage([
+        'title' => 'About',
+        'slug' => 'about',
+    ]);
+
+    $this->put(route('cms.pages.update', $page), [
+        'title' => 'About',
+        'slug' => 'about',
+        'schema_type' => 'FAQPage',
+    ])->assertSessionHasErrors('schema_type');
+
+    $this->put(route('cms.pages.update', $page), [
+        'title' => 'About',
+        'slug' => 'about',
+        'schema_type' => 'AboutPage',
+    ])->assertSessionHasNoErrors();
+
+    expect($page->fresh()->schema_type)->toBe('AboutPage');
+});

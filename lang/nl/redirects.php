@@ -30,7 +30,7 @@ return [
     'help' => [
         'from_path' => 'Bijvoorbeeld /oude-pagina. Een volledig adres op deze website mag ook.',
         'to' => 'Een pad zoals /nieuwe-pagina, of een volledig adres dat begint met https://.',
-        'file' => 'Komma of puntkomma als scheidingsteken. Een kopregel met "from" of "van" wordt overgeslagen.',
+        'file' => 'Komma of puntkomma als scheidingsteken. Een eerste regel waarvan de eerste kolom "from", "from_path" of "van" is, wordt als kopregel overgeslagen.',
     ],
     'status_codes' => [
         '301' => '301: blijvend verplaatst',

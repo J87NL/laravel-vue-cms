@@ -25,12 +25,4 @@ return [
 
     'toast_flash_key' => 'toast',
 
-    'schema_types' => [
-        'WebPage',
-        'AboutPage',
-        'ContactPage',
-        'CollectionPage',
-        'FAQPage',
-    ],
-
 ];

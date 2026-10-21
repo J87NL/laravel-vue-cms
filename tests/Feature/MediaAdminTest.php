@@ -88,3 +88,52 @@ test('formats outside the accepted list are rejected without leaving a row', fun
     ['photo.heic', 'image/heic'],
     ['photo.bmp', 'image/bmp'],
 ]);
+
+test('editing an image changes its details and refuses a focal point outside the image', function (): void {
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
+        'alt' => 'The beach',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+
+    $this->put(route('cms.media.update', $asset), [
+        'alt' => 'The dunes',
+        'caption' => 'Wissant',
+        'focal_x' => 101,
+        'focal_y' => 40,
+    ])->assertSessionHasErrors('focal_x');
+
+    expect($asset->fresh()->alt)->toBe('The beach');
+
+    $this->put(route('cms.media.update', $asset), [
+        'alt' => 'The dunes',
+        'caption' => 'Wissant',
+        'focal_x' => 20,
+        'focal_y' => 40,
+    ])->assertRedirect(route('cms.media.index'));
+
+    expect($asset->fresh()->only(['alt', 'caption', 'focal_x', 'focal_y']))->toBe([
+        'alt' => 'The dunes',
+        'caption' => 'Wissant',
+        'focal_x' => 20,
+        'focal_y' => 40,
+    ]);
+});
+
+test('the upload refuses a file above the configured size', function (): void {
+    config()->set('cms.media.max_upload_kilobytes', 50);
+
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 1200, 800)->size(51),
+        'alt' => 'Too big',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ])->assertSessionHasErrors('file');
+
+    expect(MediaAsset::query()
+        ->count())->toBe(0);
+});

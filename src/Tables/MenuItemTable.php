@@ -6,6 +6,7 @@ namespace J87NL\VueCms\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use J87NL\Cms\Actions\ReorderMenuItems;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Models\Menu;
 use J87NL\Cms\Models\MenuItem;
@@ -90,5 +91,10 @@ final class MenuItemTable extends AbstractTable
                 variant: 'destructive',
                 key: 'delete',
             );
+    }
+
+    public function performReorder(int|string $id, int|string $toId): void
+    {
+        app(ReorderMenuItems::class)->move($this->menu, (int) $id, (int) $toId);
     }
 }

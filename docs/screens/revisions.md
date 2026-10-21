@@ -15,7 +15,8 @@ can restore one. What a revision holds, and which changes record one, is describ
 | Title | The page title in the revision |
 | Blocks | The number of blocks in the revision |
 
-How many revisions are kept is set with `cms.revisions.keep` in laravel-cms, see
+How many revisions are kept is set with `cms.revisions.keep` in laravel-cms, and the page editor shows that number.
+See
 [Pruning](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md#pruning).
 
 ## Restoring

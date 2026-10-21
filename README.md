@@ -1,6 +1,6 @@
 # j87nl/laravel-vue-cms
 
-Inertia and Vue admin for [`j87nl/laravel-cms`](https://github.com/J87NL/laravel-cms): pages, blocks, media, menus, redirects and site settings, built on TranquilTools CrudBuilder, FormBuilder and TableBuilder.
+Inertia and Vue admin for [`j87nl/laravel-cms`](https://github.com/J87NL/laravel-cms): pages, blocks, media, menus, redirects and site settings, built on TranquilTools FormBuilder and TableBuilder.
 
 The Vue pages stay inside the package. The app's Inertia resolver loads them from the package, and an app overrides a single page through the configurable page names in `config/vue-cms.php`.
 

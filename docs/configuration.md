@@ -73,21 +73,6 @@ The config key the package pushes its menu items into. See [Navigation](navigati
 
 The key the success messages are flashed under with `Inertia::flash()`. See [Toasts](toasts.md).
 
-## Schema types
-
-```php
-'schema_types' => [
-    'WebPage',
-    'AboutPage',
-    'ContactPage',
-    'CollectionPage',
-    'FAQPage',
-],
-```
-
-The options of the "Page type" select in the page editor. A page may only be saved with one of these values, or
-with no value. The value is used as both the option value and its label.
-
 ## Settings read from laravel-cms
 
 A few screens read the config of `j87nl/laravel-cms` (`config/cms.php`). Change these keys there:
@@ -95,7 +80,9 @@ A few screens read the config of `j87nl/laravel-cms` (`config/cms.php`). Change 
 | Key | Used for |
 |---|---|
 | [`cms.menus`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#blocks-and-menus) | The menus shown on the [Menus](screens/menus.md) screen |
-| [`cms.media.max_upload_kilobytes`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#media) | The maximum upload size on the [Media](screens/media.md) screen. Falls back to `10240` when missing. The core itself does not read this key. |
+| [`cms.media.max_upload_kilobytes`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#media) | The maximum upload size on the [Media](screens/media.md) screen. Falls back to `10240` when missing. The `UploadMedia` action of the core checks it too. |
+| [`cms.schema_types`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#schema-types) | The options of the "Page type" select in the page editor. A page may only be saved with one of these values, or with no value. The value is both the option value and its label. Up to version 0.2.0 this list was `vue-cms.schema_types`; that key is no longer read. |
+| [`cms.revisions.keep`](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md#pruning) | The number of revisions the page editor says are kept |
 | [`cms.preview.minutes`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#preview-and-scheduling) | How long the preview link on the page editor stays valid, see [Publication](screens/publication.md#preview) |
 | [`cms.blocks.disabled`](https://github.com/J87NL/laravel-cms/blob/main/docs/blocks.md#disabling-block-types) | Disabled block types get no add button, and their create, store, edit and update routes answer `404`. Existing blocks of a disabled type stay in the [Blocks](screens/blocks.md) list with the raw type key and no edit link. |
 | [`cms.rich_text.*`](https://github.com/J87NL/laravel-cms/blob/main/docs/configuration.md#rich-text) | The editor key and options of the rich text fields in the block forms, see [Installation](installation.md) |

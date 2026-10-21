@@ -4,6 +4,15 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- Requires `j87nl/laravel-cms` `^0.2.2`.
+- Reordering and deleting menu items and editing an image run the `ReorderMenuItems`, `DeleteMenuItem` and `UpdateMedia` actions of laravel-cms. A menu reorder now also flushes the page cache.
+- The "Page type" options and their validation come from `cms.schema_types` of laravel-cms. `vue-cms.schema_types` is no longer read: move a customised list to `config/cms.php`.
+- The revisions panel shows the number from `cms.revisions.keep` instead of a fixed 20.
+- The title pattern help uses a neutral example, and the redirect import help names every header the import skips.
+- The README no longer mentions CrudBuilder, which is not a dependency.
+
 ## [0.2.0]
 
 ### Changed

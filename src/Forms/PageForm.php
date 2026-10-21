@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace J87NL\VueCms\Forms;
 
-use Illuminate\Validation\Rule;
 use J87NL\Cms\Media\MediaOptions;
 use J87NL\Cms\Models\Page;
 use J87NL\Cms\Validation\PageRules;
@@ -120,10 +119,7 @@ class PageForm extends AbstractForm
                         ->options($this->schemaTypes())
                         ->optionLabel('label')
                         ->optionValue('value')
-                        ->rules([
-                            'nullable',
-                            Rule::in(array_column($this->schemaTypes(), 'value')),
-                        ]),
+                        ->rules(PageRules::for('schema_type')),
 
                     Toggle::make('noindex')
                         ->label(__('vue-cms::pages.fields.noindex'))
@@ -138,18 +134,12 @@ class PageForm extends AbstractForm
      */
     private function schemaTypes(): array
     {
-        $types = config('vue-cms.schema_types', []);
-
-        if (! is_array($types)) {
-            return [];
-        }
-
-        return array_values(array_map(
-            fn (mixed $type): array => [
-                'value' => (string) $type,
-                'label' => (string) $type,
+        return array_map(
+            fn (string $type): array => [
+                'value' => $type,
+                'label' => $type,
             ],
-            $types,
-        ));
+            PageRules::schemaTypes(),
+        );
     }
 }

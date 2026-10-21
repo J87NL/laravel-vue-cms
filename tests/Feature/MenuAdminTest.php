@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Gate;
+use J87NL\Cms\Cache\PageCache;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Enums\PageStatus;
 use J87NL\Cms\Models\Menu;
 use J87NL\Cms\Models\MenuItem;
+use J87NL\VueCms\Tables\MenuItemTable;
+use TranquilTools\TableBuilder\Routing\SignedTableUrl;
 
 beforeEach(function (): void {
     $this->actingWithPermissions([CmsPermission::Menus->value]);
@@ -130,4 +134,49 @@ test('a new menu item goes at the end of its menu', function (): void {
     expect(MenuItem::query()
         ->where('label', 'B')
         ->value('sort_order'))->toBe(8);
+});
+
+test('reordering menu items goes through the action and flushes the page cache', function (): void {
+    $menu = Menu::forKey('main');
+    $first = $menu->items()->create(['url' => '/one', 'label' => 'One', 'sort_order' => 1]);
+    $second = $menu->items()->create(['url' => '/two', 'label' => 'Two', 'sort_order' => 2]);
+    $version = app(PageCache::class)->version();
+
+    $this->postJson(SignedTableUrl::make('table.reorder', MenuItemTable::class, [
+        'menu' => $menu->id,
+    ]), [
+        'id' => $second->id,
+        'to' => $first->id,
+    ])->assertSuccessful();
+
+    expect($menu->items()->pluck('id')->all())->toBe([$second->id, $first->id])
+        ->and(app(PageCache::class)->version())->toBe($version + 1);
+});
+
+test('reordering menu items needs the menus permission', function (): void {
+    $menu = Menu::forKey('main');
+    $first = $menu->items()->create(['url' => '/one', 'label' => 'One', 'sort_order' => 1]);
+    $second = $menu->items()->create(['url' => '/two', 'label' => 'Two', 'sort_order' => 2]);
+
+    Gate::define(CmsPermission::Menus->value, fn (): bool => false);
+
+    $this->postJson(SignedTableUrl::make('table.reorder', MenuItemTable::class, [
+        'menu' => $menu->id,
+    ]), [
+        'id' => $second->id,
+        'to' => $first->id,
+    ])->assertForbidden();
+
+    expect($menu->items()->pluck('id')->all())->toBe([$first->id, $second->id]);
+});
+
+test('deleting a menu item also deletes the items below it', function (): void {
+    $menu = Menu::forKey('main');
+    $parent = $menu->items()->create(['url' => '/parent', 'label' => 'Parent']);
+    $menu->items()->create(['url' => '/child', 'label' => 'Child', 'parent_id' => $parent->id]);
+
+    $this->delete(route('cms.menu-items.destroy', [$menu, $parent]))
+        ->assertRedirect(route('cms.menus.index'));
+
+    expect(MenuItem::query()->count())->toBe(0);
 });

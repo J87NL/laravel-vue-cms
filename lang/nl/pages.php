@@ -20,7 +20,7 @@ return [
         'blocks_description' => 'De pagina bestaat uit deze blokken, van boven naar beneden. Sleep om de volgorde te veranderen.',
         'add_block' => 'Blok toevoegen',
         'revisions' => 'Versies',
-        'revisions_description' => 'Elke wijziging bewaart een versie. De laatste 20 blijven bewaard.',
+        'revisions_description' => 'Elke wijziging bewaart een versie. De laatste :count blijven bewaard.',
         'danger' => 'Pagina verwijderen',
         'danger_description' => 'Verwijderen haalt de pagina, de blokken en de versies weg.',
     ],

@@ -128,6 +128,7 @@ class PageController extends Controller
                 array_keys($registry->all()),
             ),
             'revisions' => RevisionTable::build($page),
+            'revisionsKept' => max(1, (int) config('cms.revisions.keep', 20)),
             'publication' => [
                 'canPublish' => $canPublish,
                 'publishUrl' => route('cms.pages.publish', $page),

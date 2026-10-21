@@ -29,7 +29,7 @@ return [
         'llms_intro' => 'llms.txt introduction',
     ],
     'help' => [
-        'title_pattern' => 'Use :title for the page title, for example ":title | Johan Montenij". Empty means ":title | site name".',
+        'title_pattern' => 'Use :title for the page title, for example ":title | My website". Empty means ":title | site name".',
         'default_meta_description' => 'For pages without their own description and without a text block.',
         'og_image_id' => 'Shown when a page without its own image is shared.',
         'privacy_page_id' => 'Forms on the site link to this page.',

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use J87NL\Cms\Actions\DeleteMenuItem;
 use J87NL\Cms\Actions\SaveMenuItem;
 use J87NL\Cms\Models\Menu;
 use J87NL\Cms\Models\MenuItem;
@@ -57,9 +58,9 @@ class MenuItemController extends Controller
         return to_route('cms.menus.index');
     }
 
-    public function destroy(Menu $menu, MenuItem $item): RedirectResponse
+    public function destroy(Menu $menu, MenuItem $item, DeleteMenuItem $deleteMenuItem): RedirectResponse
     {
-        $item->delete();
+        $deleteMenuItem->handle($menu, $item);
 
         $this->toast(__('vue-cms::menus.flash.deleted'));
 

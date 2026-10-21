@@ -30,7 +30,7 @@ return [
     'help' => [
         'from_path' => 'For example /old-page. A full address on this site works too.',
         'to' => 'A path such as /new-page, or a full address starting with https://.',
-        'file' => 'Comma or semicolon separated. A header line starting with "from" or "van" is skipped.',
+        'file' => 'Comma or semicolon separated. A first line whose first column is "from", "from_path" or "van" is skipped as a header.',
     ],
     'status_codes' => [
         '301' => '301: moved permanently',
