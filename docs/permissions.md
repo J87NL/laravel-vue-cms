@@ -46,9 +46,10 @@ editing, hiding, deleting and reordering blocks, and restoring a revision.
 and the page editor use it to disable the controls up front, with the translated reason
 `vue-cms::pages.publication.write_requires_publish`.
 
-The MCP page and block tools of laravel-cms check `cms.pages.write` too when it is defined. For them this rule adds
-nothing: the tools only change pages that are not published and not scheduled, even for a user who may publish, and on
-those pages the rule only asks for `cms.pages.edit`. If your app defines its own `cms.pages.write` gate, it replaces
+The MCP page and block tools of laravel-cms check `cms.pages.write` too when it is defined, for their direct writes:
+the live tools, and the draft tools on a page that is not published. A draft tool on a published page writes to the
+page's pending revision and skips the gate, so an editor with only `cms.pages.edit` can propose changes; publishing
+them in the admin (see [Pending changes](screens/publication.md#pending-changes)) needs `cms.pages.publish`. If your app defines its own `cms.pages.write` gate, it replaces
 this one. See
 [With laravel-vue-cms installed](https://github.com/J87NL/laravel-cms/blob/main/docs/permissions.md#with-laravel-vue-cms-installed).
 

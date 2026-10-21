@@ -44,6 +44,20 @@ const props = defineProps<{
         scheduleError: string | null;
         scheduleForm: FormSchema | null;
     };
+    pendingRevision: {
+        author: string;
+        updatedAt: string | null;
+        title: string;
+        fields: string[];
+        blocks: {
+            added: number;
+            removed: number;
+            changed: number;
+            reordered: boolean;
+        };
+        publishUrl: string;
+        discardUrl: string;
+    } | null;
     previewUrl: string;
     write: {
         blockedReason: string | null;
@@ -69,6 +83,30 @@ function moment(value: string): string {
 
 function post(url: string): void {
     router.post(url, {}, { preserveScroll: true });
+}
+
+async function publishPending(url: string): Promise<void> {
+    if (
+        !(await confirm(
+            trans('vue-cms::pages.publication.pending_publish_confirm'),
+        ))
+    ) {
+        return;
+    }
+
+    router.post(url, {}, { preserveScroll: true });
+}
+
+async function discardPending(url: string): Promise<void> {
+    if (
+        !(await confirm(
+            trans('vue-cms::pages.publication.pending_discard_confirm'),
+        ))
+    ) {
+        return;
+    }
+
+    router.delete(url, { preserveScroll: true });
 }
 
 async function destroy(): Promise<void> {
@@ -269,6 +307,98 @@ async function destroy(): Promise<void> {
                     {{ $t('vue-cms::pages.publication.schedule') }}
                 </h3>
                 <Form :schema="publication.scheduleForm" />
+            </div>
+        </section>
+
+        <section
+            v-if="pendingRevision"
+            :class="ui.panel"
+            data-test="pending-revision"
+        >
+            <div class="flex flex-col gap-1">
+                <h2 :class="ui.heading">
+                    {{ $t('vue-cms::pages.publication.pending_title') }}
+                </h2>
+                <p :class="ui.muted">
+                    {{
+                        $t('vue-cms::pages.publication.pending_description', {
+                            author: pendingRevision.author,
+                            moment: pendingRevision.updatedAt
+                                ? moment(pendingRevision.updatedAt)
+                                : '',
+                        })
+                    }}
+                </p>
+            </div>
+
+            <ul class="list-disc pl-5 text-sm">
+                <li v-if="pendingRevision.fields.length > 0">
+                    {{
+                        $t('vue-cms::pages.publication.pending_fields', {
+                            fields: pendingRevision.fields.join(', '),
+                        })
+                    }}
+                </li>
+                <li>
+                    {{
+                        $t('vue-cms::pages.publication.pending_blocks', {
+                            added: String(pendingRevision.blocks.added),
+                            changed: String(pendingRevision.blocks.changed),
+                            removed: String(pendingRevision.blocks.removed),
+                        })
+                    }}
+                </li>
+                <li v-if="pendingRevision.blocks.reordered">
+                    {{ $t('vue-cms::pages.publication.pending_reordered') }}
+                </li>
+            </ul>
+
+            <p
+                v-if="!publication.canPublish || !$can('cms.pages.publish')"
+                :class="ui.notice"
+            >
+                {{
+                    $t('vue-cms::pages.publication.pending_requires_permission')
+                }}
+            </p>
+
+            <div :class="ui.toolbar">
+                <button
+                    type="button"
+                    :class="ui.primaryButton"
+                    :disabled="
+                        !publication.canPublish || !$can('cms.pages.publish')
+                    "
+                    :title="
+                        publication.canPublish
+                            ? undefined
+                            : $t(
+                                  'vue-cms::pages.publication.pending_requires_permission',
+                              )
+                    "
+                    data-test="pending-publish"
+                    @click="publishPending(pendingRevision.publishUrl)"
+                >
+                    {{ $t('vue-cms::pages.publication.pending_publish') }}
+                </button>
+                <button
+                    type="button"
+                    :class="ui.dangerButton"
+                    :disabled="
+                        !publication.canPublish || !$can('cms.pages.publish')
+                    "
+                    :title="
+                        publication.canPublish
+                            ? undefined
+                            : $t(
+                                  'vue-cms::pages.publication.pending_requires_permission',
+                              )
+                    "
+                    data-test="pending-discard"
+                    @click="discardPending(pendingRevision.discardUrl)"
+                >
+                    {{ $t('vue-cms::pages.publication.pending_discard') }}
+                </button>
             </div>
         </section>
 

@@ -4,6 +4,15 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- The page editor shows the pending revision of a published page (changed fields, added, changed and removed blocks, new block order) with "Publish changes" and "Discard changes" buttons. Both confirm first and need `cms.pages.publish`. New routes `cms.pages.pending.publish` and `cms.pages.pending.discard`, and the `pendingRevision` prop of `cms/pages/Edit`.
+
+### Changed
+
+- Requires `j87nl/laravel-cms` `^0.3` for pending revisions.
+- The revision list leaves out the pending revision.
+
 ## [0.2.1] - 2026-10-21
 
 ### Removed

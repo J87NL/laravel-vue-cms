@@ -30,6 +30,7 @@ final class RevisionTable extends AbstractTable
     public function for(): Builder
     {
         return Revision::query()
+            ->history()
             ->with('author')
             ->where('page_id', $this->page->id)
             ->orderByDesc('id');
@@ -38,6 +39,7 @@ final class RevisionTable extends AbstractTable
     public function configure(TableBuilder $table): void
     {
         $latestId = Revision::query()
+            ->history()
             ->where('page_id', $this->page->id)
             ->max('id');
 

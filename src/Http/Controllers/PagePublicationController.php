@@ -8,7 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use J87NL\Cms\Actions\ChangePageStatus;
+use J87NL\Cms\Actions\DiscardPendingRevision;
 use J87NL\Cms\Actions\MakeHomePage;
+use J87NL\Cms\Actions\PublishPage;
 use J87NL\Cms\Actions\SchedulePage;
 use J87NL\Cms\Enums\PageStatus;
 use J87NL\Cms\Models\Page;
@@ -30,6 +32,24 @@ class PagePublicationController extends Controller
         $changePageStatus->handle($page, PageStatus::Unpublished, $this->userId($request));
 
         $this->toast(__('vue-cms::pages.flash.unpublished'));
+
+        return to_route('cms.pages.edit', $page);
+    }
+
+    public function publishPending(Request $request, Page $page, PublishPage $publishPage): RedirectResponse
+    {
+        $publishPage->handle($page, $this->userId($request));
+
+        $this->toast(__('vue-cms::pages.flash.pending_published'));
+
+        return to_route('cms.pages.edit', $page);
+    }
+
+    public function discardPending(Page $page, DiscardPendingRevision $discardPendingRevision): RedirectResponse
+    {
+        $discardPendingRevision->handle($page);
+
+        $this->toast(__('vue-cms::pages.flash.pending_discarded'));
 
         return to_route('cms.pages.edit', $page);
     }

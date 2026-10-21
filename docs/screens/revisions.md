@@ -6,7 +6,9 @@ can restore one. What a revision holds, and which changes record one, is describ
 
 ## Revision list
 
-`J87NL\VueCms\Tables\RevisionTable` shows the revisions of the page, newest first, 10 per page:
+`J87NL\VueCms\Tables\RevisionTable` shows the revisions of the page, newest first, 10 per page. A pending revision
+is not in this list and cannot be restored; it has its own panel, see
+[Pending changes](publication.md#pending-changes).
 
 | Column | Content |
 |---|---|

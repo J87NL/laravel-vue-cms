@@ -24,6 +24,7 @@ use J87NL\Cms\Models\Page;
 use J87NL\VueCms\Forms\PageForm;
 use J87NL\VueCms\Forms\SchedulePageForm;
 use J87NL\VueCms\Support\PageWriteAccess;
+use J87NL\VueCms\Support\PendingRevisionSummary;
 use J87NL\VueCms\Tables\BlockTable;
 use J87NL\VueCms\Tables\RevisionTable;
 
@@ -83,7 +84,7 @@ class PageController extends Controller
         return to_route('cms.pages.edit', $page);
     }
 
-    public function edit(Request $request, Page $page, BlockRegistry $registry, MakeHomePage $makeHomePage): Response
+    public function edit(Request $request, Page $page, BlockRegistry $registry, MakeHomePage $makeHomePage, PendingRevisionSummary $pendingRevisionSummary): Response
     {
         $canPublish = (bool) $request->user()?->can(CmsPermission::PagesPublish->value);
         $writeBlockedReason = PageWriteAccess::blockedReason($request->user(), $page);
@@ -152,6 +153,7 @@ class PageController extends Controller
                         ])
                     : null,
             ],
+            'pendingRevision' => $pendingRevisionSummary->for($page),
             'previewUrl' => PreviewController::url($page),
             'deletion' => [
                 'url' => route('cms.pages.destroy', $page),

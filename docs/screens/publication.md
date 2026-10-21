@@ -21,6 +21,23 @@ The statuses, and when a page is public, are described in
 "Take offline" is disabled, with the reason shown, for the home page and for the pages above it. The rules of the
 home page are listed in [The home page](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#the-home-page).
 
+## Pending changes
+
+A published page can hold a pending revision: changes that are not live yet, proposed through the MCP draft tools of
+laravel-cms (see [Draft and live mode](https://github.com/J87NL/laravel-cms/blob/main/docs/mcp-tools.md#draft-and-live-mode)).
+The page editor then shows a "Changes waiting to be published" panel under the publication panel, with who proposed
+them and when, which page fields change, and how many blocks are added, changed and removed, and whether their order
+changes. The fields and blocks below the panel still show the live page.
+
+| Button | Route | What happens |
+|---|---|---|
+| Publish changes | `POST` `cms.pages.pending.publish` | `PublishPage` replaces the live page fields and blocks with the pending ones |
+| Discard changes | `DELETE` `cms.pages.pending.discard` | `DiscardPendingRevision` throws the pending revision away |
+
+Both ask for confirmation first and need `cms.pages.edit` and `cms.pages.publish`; without the publish permission the
+buttons are disabled with a notice. Publishing also overwrites changes made directly on the live page after the
+pending revision was started; those stay in the revision history.
+
 ## Home page
 
 "Make home page" posts to `cms.pages.home` and runs the `MakeHomePage` action of laravel-cms. The button is

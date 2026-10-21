@@ -68,6 +68,7 @@ The tree is rendered with the `TreeView` component of FormBuilder.
 | `blockTypes` | `{ key, label, createUrl }[]` | One entry per registered, enabled block type |
 | `revisions` | `TableData` | The revision table |
 | `publication` | object | See below |
+| `pendingRevision` | object \| `null` | The pending revision of a published page, see below, or `null` |
 | `previewUrl` | `string` | The signed preview link |
 | `deletion` | `{ url: string, blockedReason: string \| null }` | The delete URL and why deleting is not possible |
 
@@ -85,6 +86,18 @@ The tree is rendered with the `TreeView` component of FormBuilder.
 | `unpublishAt` | `string \| null` | ISO 8601 |
 | `scheduleError` | `string \| null` | Why the last planned change failed |
 | `scheduleForm` | `FormSchema \| null` | The schedule form, `null` without `cms.pages.publish` |
+
+`pendingRevision` holds (built by `J87NL\VueCms\Support\PendingRevisionSummary`):
+
+| Key | Type | Description |
+|---|---|---|
+| `author` | `string` | The name of the user who started it, or "Unknown" |
+| `updatedAt` | `string \| null` | ISO 8601, the last change |
+| `title` | `string` | The page title in the pending revision |
+| `fields` | `string[]` | Translated labels of the page fields that differ from the live page |
+| `blocks` | `{ added: number, changed: number, removed: number, reordered: boolean }` | Block changes compared with the live page |
+| `publishUrl` | `string` | |
+| `discardUrl` | `string` | |
 
 ### cms/media/Index
 

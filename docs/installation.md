@@ -5,7 +5,7 @@
 - PHP 8.5
 - Laravel 13
 - Inertia 3 with Vue 3
-- `j87nl/laravel-cms` 0.2.2 or later within 0.2 (installed for you, see step 1)
+- `j87nl/laravel-cms` 0.3 (installed for you, see step 1)
 - `laravel-vue-i18n` in the Vue app
 - A global `$can(permission)` helper in the Vue app, see [Host app contract](host-app-contract.md)
 
