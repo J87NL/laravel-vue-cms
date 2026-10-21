@@ -22,6 +22,8 @@ class PagePublicationController extends Controller
 {
     public function publish(Request $request, Page $page, ChangePageStatus $changePageStatus): RedirectResponse
     {
+        Gate::authorize(PageWriteAccess::ABILITY, $page);
+
         $changePageStatus->handle($page, PageStatus::Published, $this->userId($request));
 
         $this->toast(__('vue-cms::pages.flash.published'));
@@ -31,6 +33,8 @@ class PagePublicationController extends Controller
 
     public function unpublish(Request $request, Page $page, ChangePageStatus $changePageStatus): RedirectResponse
     {
+        Gate::authorize(PageWriteAccess::ABILITY, $page);
+
         $changePageStatus->handle($page, PageStatus::Unpublished, $this->userId($request));
 
         $this->toast(__('vue-cms::pages.flash.unpublished'));

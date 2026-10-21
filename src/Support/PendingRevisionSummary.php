@@ -60,10 +60,16 @@ class PendingRevisionSummary
 
     private function editorName(Revision $revision): mixed
     {
+        $pending = $revision->snapshot['pending'] ?? [];
+
+        if (! is_array($pending) || ! array_key_exists('edited_by', $pending)) {
+            return $revision->author?->getAttribute('name');
+        }
+
         $editorId = PendingRevisionEditor::editedBy($revision->snapshot);
 
         if (is_null($editorId)) {
-            return $revision->author?->getAttribute('name');
+            return null;
         }
 
         $model = Revision::userModel();

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Gate;
 use J87NL\Cms\Actions\SaveBlock;
 use J87NL\Cms\Blocks\BlockRegistry;
@@ -218,3 +219,59 @@ test('the summary compares the pending revision with the page it started from', 
         ->assertJsonPath('props.pendingRevision.blocks.removed', 1)
         ->assertJsonPath('props.pendingRevision.editor', __('vue-cms::revisions.unknown_author'));
 });
+
+test('the summary names the user who started the changes and the user of the last change', function (): void {
+    config()->set('cms.user_model', User::class);
+
+    $alice = User::query()
+        ->forceCreate([
+            'name' => 'Alice',
+        ]);
+    $bob = User::query()
+        ->forceCreate([
+            'name' => 'Bob',
+        ]);
+
+    $page = makePage([
+        'title' => 'Live',
+    ], PageStatus::Published);
+
+    $editor = app(PendingRevisionEditor::class);
+    $editor->updatePage($page, ['title' => 'Een'], $alice->id);
+    $editor->updatePage($page, ['title' => 'Twee'], $bob->id);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.pendingRevision.author', 'Alice')
+        ->assertJsonPath('props.pendingRevision.editor', 'Bob');
+
+    $editor->updatePage($page, ['title' => 'Drie'], null);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertJsonPath('props.pendingRevision.editor', __('vue-cms::revisions.unknown_author'));
+});
+
+test('publishing and taking a page offline respect the page write gate', function (string $route, PageStatus $status): void {
+    $page = makePage([
+        'title' => 'Pagina',
+        'slug' => 'pagina',
+    ], $status);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+        CmsPermission::PagesPublish->value,
+    ]);
+
+    Gate::define(PageWriteAccess::ABILITY, fn (): bool => false);
+
+    $this->post(route($route, $page))->assertForbidden();
+
+    expect($page->fresh()->status)->toBe($status);
+})->with([
+    'publish' => ['cms.pages.publish', PageStatus::Draft],
+    'unpublish' => ['cms.pages.unpublish', PageStatus::Published],
+]);
