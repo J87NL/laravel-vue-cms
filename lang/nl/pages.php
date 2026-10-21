@@ -74,7 +74,7 @@ return [
         'write_requires_publish' => 'Deze pagina is gepubliceerd. Voor wijzigen heb je het recht "Pagina\'s publiceren" nodig.',
         'move_requires_publish' => 'Voor het verplaatsen van een gepubliceerde pagina heb je het recht "Pagina\'s publiceren" nodig.',
         'pending_title' => 'Wijzigingen die wachten op publicatie',
-        'pending_description' => 'Wijzigingen die :author voorstelde, voor het laatst op :moment, staan nog niet live. Bezoekers zien de pagina zoals hieronder. Publiceren vervangt de live paginavelden en blokken door deze wijzigingen, ook wijzigingen die hieronder zijn gedaan nadat ze werden voorgesteld.',
+        'pending_description' => 'Wijzigingen die :author voorstelde (laatste wijziging door :editor op :moment) staan nog niet live. Bezoekers zien de pagina zoals hieronder. Publiceren past alleen deze wijzigingen toe; wat hieronder intussen is aangepast blijft staan, tenzij de wijzigingen hetzelfde veld of blok raken.',
         'pending_fields' => 'Gewijzigde velden: :fields.',
         'pending_blocks' => 'Blokken: :added toegevoegd, :changed gewijzigd, :removed verwijderd.',
         'pending_reordered' => 'De volgorde van de blokken verandert.',

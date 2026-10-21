@@ -92,10 +92,11 @@ The tree is rendered with the `TreeView` component of FormBuilder.
 | Key | Type | Description |
 |---|---|---|
 | `author` | `string` | The name of the user who started it, or "Unknown" |
+| `editor` | `string` | The name of the user of the last change, or "Unknown" |
 | `updatedAt` | `string \| null` | ISO 8601, the last change |
 | `title` | `string` | The page title in the pending revision |
-| `fields` | `string[]` | Translated labels of the page fields that differ from the live page |
-| `blocks` | `{ added: number, changed: number, removed: number, reordered: boolean }` | Block changes compared with the live page |
+| `fields` | `string[]` | Translated labels of the page fields the proposal changes |
+| `blocks` | `{ added: number, changed: number, removed: number, reordered: boolean }` | Block changes compared with the page the proposal started from |
 | `publishUrl` | `string` | |
 | `discardUrl` | `string` | |
 

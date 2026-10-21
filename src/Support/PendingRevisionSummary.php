@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace J87NL\VueCms\Support;
 
+use Illuminate\Database\Eloquent\Model;
 use J87NL\Cms\Actions\RecordRevision;
 use J87NL\Cms\Models\Page;
 use J87NL\Cms\Models\Revision;
@@ -21,7 +22,7 @@ class PendingRevisionSummary
      */
     public function for(Page $page): ?array
     {
-        $revision = $this->pending->find($page);
+        $revision = $page->isPublished() ? $this->pending->find($page) : null;
 
         if (is_null($revision)) {
             return null;
@@ -29,16 +30,18 @@ class PendingRevisionSummary
 
         $revision->loadMissing('author');
 
-        $live = $this->recordRevision->snapshot($page);
-        $pendingBlocks = $this->blocksById($revision->snapshot['blocks']);
-        $liveBlocks = $this->blocksById($live['blocks']);
+        $content = PendingRevisionEditor::content($revision->snapshot);
+        $base = PendingRevisionEditor::base($revision->snapshot) ?? $this->recordRevision->snapshot($page);
+        $pendingBlocks = $this->blocksById($content['blocks']);
+        $liveBlocks = $this->blocksById($base['blocks']);
         $common = array_values(array_intersect(array_keys($pendingBlocks), array_keys($liveBlocks)));
 
         return [
-            'author' => (string) ($revision->author?->getAttribute('name') ?? __('vue-cms::revisions.unknown_author')),
+            'author' => $this->name($revision->author?->getAttribute('name')),
+            'editor' => $this->name($this->editorName($revision)),
             'updatedAt' => $revision->updated_at?->toIso8601String(),
-            'title' => (string) ($revision->snapshot['page']['title'] ?? ''),
-            'fields' => $this->changedFields($revision, $page),
+            'title' => (string) ($content['page']['title'] ?? ''),
+            'fields' => $this->changedFields($content['page'], $base['page']),
             'blocks' => [
                 'added' => count(array_diff_key($pendingBlocks, $liveBlocks)),
                 'removed' => count(array_diff_key($liveBlocks, $pendingBlocks)),
@@ -50,19 +53,45 @@ class PendingRevisionSummary
         ];
     }
 
+    private function name(mixed $name): string
+    {
+        return is_string($name) && $name !== '' ? $name : (string) __('vue-cms::revisions.unknown_author');
+    }
+
+    private function editorName(Revision $revision): mixed
+    {
+        $editorId = PendingRevisionEditor::editedBy($revision->snapshot);
+
+        if (is_null($editorId)) {
+            return $revision->author?->getAttribute('name');
+        }
+
+        $model = Revision::userModel();
+
+        if ($model === Model::class) {
+            return null;
+        }
+
+        return $model::query()
+            ->find($editorId)
+            ?->getAttribute('name');
+    }
+
     /**
+     * @param  array<string, mixed>  $pending
+     * @param  array<string, mixed>  $base
      * @return list<string>
      */
-    private function changedFields(Revision $revision, Page $page): array
+    private function changedFields(array $pending, array $base): array
     {
         $labels = [];
 
         foreach (Page::CONTENT_ATTRIBUTES as $field) {
-            if (! array_key_exists($field, $revision->snapshot['page'])) {
+            if (! array_key_exists($field, $pending)) {
                 continue;
             }
 
-            if ($this->normalize($revision->snapshot['page'][$field]) === $this->normalize($page->getAttribute($field))) {
+            if ($this->normalize($pending[$field]) === $this->normalize($base[$field] ?? null)) {
                 continue;
             }
 

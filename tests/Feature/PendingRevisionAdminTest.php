@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Gate;
 use J87NL\Cms\Actions\SaveBlock;
 use J87NL\Cms\Blocks\BlockRegistry;
 use J87NL\Cms\CmsPermission;
@@ -10,6 +11,7 @@ use J87NL\Cms\Models\Block;
 use J87NL\Cms\Models\Page;
 use J87NL\Cms\Models\Revision;
 use J87NL\Cms\Pages\PendingRevisionEditor;
+use J87NL\VueCms\Support\PageWriteAccess;
 
 function pendingAdminPage(): array
 {
@@ -179,4 +181,40 @@ test('the revision history leaves out the pending revision and its restore route
     expect(Page::query()
         ->find($page->id)
         ->title)->toBe('Live');
+});
+
+test('publishing or discarding pending changes respects the page write gate', function (string $method, string $route): void {
+    [$page] = pendingAdminPage();
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+        CmsPermission::PagesPublish->value,
+    ]);
+
+    Gate::define(PageWriteAccess::ABILITY, fn (): bool => false);
+
+    $this->{$method}(route($route, $page))->assertForbidden();
+
+    expect($page->fresh()->title)->toBe('Live')
+        ->and($page->pendingRevision()->exists())->toBeTrue();
+})->with([
+    'publish' => ['post', 'cms.pages.pending.publish'],
+    'discard' => ['delete', 'cms.pages.pending.discard'],
+]);
+
+test('the summary compares the pending revision with the page it started from', function (): void {
+    [$page] = pendingAdminPage();
+
+    app(SaveBlock::class)->handle($page, new Block, app(BlockRegistry::class)->find('rich_text'), ['html' => '<p>Live erbij</p>'], null);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+        CmsPermission::PagesPublish->value,
+    ]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.pendingRevision.blocks.added', 1)
+        ->assertJsonPath('props.pendingRevision.blocks.removed', 1)
+        ->assertJsonPath('props.pendingRevision.editor', __('vue-cms::revisions.unknown_author'));
 });

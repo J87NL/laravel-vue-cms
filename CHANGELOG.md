@@ -6,7 +6,7 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ### Added
 
-- The page editor shows the pending revision of a published page (changed fields, added, changed and removed blocks, new block order) with "Publish changes" and "Discard changes" buttons. Both confirm first and need `cms.pages.publish`. New routes `cms.pages.pending.publish` and `cms.pages.pending.discard`, and the `pendingRevision` prop of `cms/pages/Edit`.
+- The page editor shows the pending revision of a published page (changed fields, added, changed and removed blocks, new block order) with "Publish changes" and "Discard changes" buttons. Both confirm first and need `cms.pages.publish` and the `cms.pages.write` gate. New routes `cms.pages.pending.publish` and `cms.pages.pending.discard`, and the `pendingRevision` prop of `cms/pages/Edit`.
 
 ### Changed
 

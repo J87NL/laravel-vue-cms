@@ -74,7 +74,7 @@ return [
         'write_requires_publish' => 'This page is published. Changing it requires the "Publish pages" permission.',
         'move_requires_publish' => 'Moving a published page requires the "Publish pages" permission.',
         'pending_title' => 'Changes waiting to be published',
-        'pending_description' => 'Changes proposed by :author, last on :moment, are not live yet. Visitors see the page as it is below. Publishing replaces the live page fields and blocks with these changes, also changes made below after they were proposed.',
+        'pending_description' => 'Changes proposed by :author (last change by :editor on :moment) are not live yet. Visitors see the page as it is below. Publishing applies only these changes; edits made below in the meantime stay, unless the changes touch the same field or block.',
         'pending_fields' => 'Changed fields: :fields.',
         'pending_blocks' => 'Blocks: :added added, :changed changed, :removed removed.',
         'pending_reordered' => 'The block order changes.',

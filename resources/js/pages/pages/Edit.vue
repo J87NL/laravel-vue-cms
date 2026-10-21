@@ -46,6 +46,7 @@ const props = defineProps<{
     };
     pendingRevision: {
         author: string;
+        editor: string;
         updatedAt: string | null;
         title: string;
         fields: string[];
@@ -323,6 +324,7 @@ async function destroy(): Promise<void> {
                     {{
                         $t('vue-cms::pages.publication.pending_description', {
                             author: pendingRevision.author,
+                            editor: pendingRevision.editor,
                             moment: pendingRevision.updatedAt
                                 ? moment(pendingRevision.updatedAt)
                                 : '',

@@ -7,6 +7,7 @@ namespace J87NL\VueCms\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Gate;
 use J87NL\Cms\Actions\ChangePageStatus;
 use J87NL\Cms\Actions\DiscardPendingRevision;
 use J87NL\Cms\Actions\MakeHomePage;
@@ -15,6 +16,7 @@ use J87NL\Cms\Actions\SchedulePage;
 use J87NL\Cms\Enums\PageStatus;
 use J87NL\Cms\Models\Page;
 use J87NL\VueCms\Forms\SchedulePageForm;
+use J87NL\VueCms\Support\PageWriteAccess;
 
 class PagePublicationController extends Controller
 {
@@ -38,6 +40,8 @@ class PagePublicationController extends Controller
 
     public function publishPending(Request $request, Page $page, PublishPage $publishPage): RedirectResponse
     {
+        Gate::authorize(PageWriteAccess::ABILITY, $page);
+
         $publishPage->handle($page, $this->userId($request));
 
         $this->toast(__('vue-cms::pages.flash.pending_published'));
@@ -47,6 +51,8 @@ class PagePublicationController extends Controller
 
     public function discardPending(Page $page, DiscardPendingRevision $discardPendingRevision): RedirectResponse
     {
+        Gate::authorize(PageWriteAccess::ABILITY, $page);
+
         $discardPendingRevision->handle($page);
 
         $this->toast(__('vue-cms::pages.flash.pending_discarded'));
