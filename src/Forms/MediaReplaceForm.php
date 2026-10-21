@@ -29,7 +29,6 @@ class MediaReplaceForm extends AbstractForm
                 ->required()
                 ->rules([
                     'file',
-                    sprintf('mimetypes:%s', implode(',', self::accept())),
                     ...MediaUploadForm::sizeRules(),
                 ]),
         ];

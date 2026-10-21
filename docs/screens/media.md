@@ -37,8 +37,9 @@ and the `DeleteMedia` action of laravel-cms refuses it as well. What counts as a
 | `focal_x` | Required integer from 0 to 100, default 50 |
 | `focal_y` | Required integer from 0 to 100, default 50 |
 
-The file picker offers `image/jpeg`, `image/png`, `image/webp` and `image/gif`. The form does not check the type
-itself. The `UploadMedia` action does, with a validation error on `file`. What it refuses is listed in
+The file picker offers `image/jpeg`, `image/png`, `image/webp` and `image/gif`, and the form refuses other detected
+types with the `mimetypes` rule that the form builder's `accept()` adds. The `UploadMedia` action checks the image
+again, with a validation error on `file`. What it refuses is listed in
 [Uploading](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#uploading).
 
 The focal point is the part of the image that must stay visible when it is cropped, see
@@ -56,15 +57,15 @@ Below the form, the edit screen has a "Bestand vervangen" (replace file) section
 for confirmation with the app's confirm dialog, then posts the file to `POST admin/cms/media/{asset}/replace`
 (`cms.media.replace`). The request is validated with `J87NL\VueCms\Forms\MediaReplaceForm`: a required file of at
 most `cms.media.max_upload_kilobytes` (no limit when it is `0`), whose detected content type is one of
-`MediaReplaceForm::accept()` (`image/jpeg`, `image/png`, `image/webp`, `image/gif`, the `mimetypes` rule). The file
-picker offers the same types. Then the `ReplaceMediaFile` action of laravel-cms stores the new file with the
-same checks as an upload. The image keeps its id, alt text, caption and focal point, so every page that uses it shows
-the new file without being changed. The old file and its conversions are deleted. See
+`MediaReplaceForm::accept()` (`image/jpeg`, `image/png`, `image/webp` and `image/gif`; the form builder's `accept()`
+adds the `mimetypes` rule). The file picker offers the same types. Then the `ReplaceMediaFile` action of laravel-cms
+stores the new file with the same checks as an upload. The image keeps its id, alt text, caption and focal point, so
+every page that uses it shows the new file without being changed. The old file and its conversions are deleted. See
 [Replacing the file](https://github.com/J87NL/laravel-cms/blob/main/docs/media.md#replacing-the-file).
 
 The confirmation warns that unsaved changes in the form above are lost, because the screen reloads after the
-replacement. A refused file shows its error in the section and leaves the current file in place. After a replacement the screen
-opens again with a toast.
+replacement. A refused file shows its error in the section and leaves the current file in place. After a replacement
+the screen opens again with a toast.
 
 There is no MCP tool to upload or replace an image; that only happens here.
 
