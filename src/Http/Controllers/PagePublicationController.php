@@ -66,6 +66,8 @@ class PagePublicationController extends Controller
 
     public function schedule(Request $request, Page $page, SchedulePage $schedulePage): RedirectResponse
     {
+        Gate::authorize(PageWriteAccess::ABILITY, $page);
+
         $validated = SchedulePageForm::make($page)->validate($request);
 
         $schedulePage->handle($page, $this->moment($validated['publish_at'] ?? null), $this->moment($validated['unpublish_at'] ?? null));

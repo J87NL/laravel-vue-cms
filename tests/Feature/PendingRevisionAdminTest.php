@@ -275,3 +275,23 @@ test('publishing and taking a page offline respect the page write gate', functio
     'publish' => ['cms.pages.publish', PageStatus::Draft],
     'unpublish' => ['cms.pages.unpublish', PageStatus::Published],
 ]);
+
+test('scheduling respects the page write gate', function (): void {
+    $page = makePage([
+        'title' => 'Pagina',
+        'slug' => 'pagina',
+    ], PageStatus::Published);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+        CmsPermission::PagesPublish->value,
+    ]);
+
+    Gate::define(PageWriteAccess::ABILITY, fn (): bool => false);
+
+    $this->post(route('cms.pages.schedule', $page), [
+        'unpublish_at' => now()->addDay()->format('Y-m-d H:i:s'),
+    ])->assertForbidden();
+
+    expect($page->fresh()->unpublish_at)->toBeNull();
+});

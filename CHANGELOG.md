@@ -12,7 +12,7 @@ All notable changes to this package are documented here. The format follows [Kee
 
 - Requires `j87nl/laravel-cms` `^0.3` for pending revisions.
 - The revision list leaves out the pending revision.
-- "Publish" and "Take offline" also check the `cms.pages.write` gate, because taking a page offline now applies its pending revision.
+- "Publish", "Take offline" and the schedule form also check the `cms.pages.write` gate, because taking a page offline now applies its pending revision.
 
 ## [0.2.1] - 2026-10-21
 

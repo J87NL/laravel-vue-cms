@@ -13,7 +13,7 @@ see the buttons disabled, with a notice that explains why. See [Permissions](../
 | Publish | `POST` `cms.pages.publish` | `ChangePageStatus` sets the status to `published` |
 | Take offline | `POST` `cms.pages.unpublish` | `ChangePageStatus` sets the status to `unpublished`, and applies a pending revision to the offline page |
 
-Both also check the `cms.pages.write` gate with the page, see [Permissions](../permissions.md#changing-a-published-page).
+Both, and the schedule form, also check the `cms.pages.write` gate with the page, see [Permissions](../permissions.md#changing-a-published-page).
 
 The statuses, and when a page is public, are described in
 [Statuses](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#statuses) in the laravel-cms docs.
