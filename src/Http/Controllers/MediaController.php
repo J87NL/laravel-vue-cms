@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use J87NL\Cms\Actions\DeleteMedia;
+use J87NL\Cms\Actions\UpdateMedia;
 use J87NL\Cms\Actions\UploadMedia;
 use J87NL\Cms\Models\MediaAsset;
 use J87NL\VueCms\Forms\MediaForm;
@@ -87,9 +88,9 @@ class MediaController extends Controller
         ]);
     }
 
-    public function update(Request $request, MediaAsset $asset): RedirectResponse
+    public function update(Request $request, MediaAsset $asset, UpdateMedia $updateMedia): RedirectResponse
     {
-        $asset->update(MediaForm::make()->validate($request));
+        $updateMedia->handle($asset, MediaForm::make()->validate($request));
 
         $this->toast(__('vue-cms::media.flash.saved'));
 

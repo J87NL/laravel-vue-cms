@@ -5,7 +5,7 @@
 - PHP 8.5
 - Laravel 13
 - Inertia 3 with Vue 3
-- `j87nl/laravel-cms` 0.2 (installed for you, see step 1)
+- `j87nl/laravel-cms` 0.2.2 or later within 0.2 (installed for you, see step 1)
 - `laravel-vue-i18n` in the Vue app
 - A global `$can(permission)` helper in the Vue app, see [Host app contract](host-app-contract.md)
 
@@ -19,6 +19,12 @@ This package is the admin. It requires and installs `j87nl/laravel-cms`, the cor
 block types and public website, so this one `require` installs both. It also pulls in
 `tranquil-tools/laravel-vue-form-builder` and `tranquil-tools/laravel-vue-table-builder`. The service provider
 `J87NL\VueCms\VueCmsServiceProvider` is auto-discovered.
+
+To upgrade, update both packages together, because a new version of this package can require a newer core:
+
+```bash
+composer update j87nl/laravel-vue-cms j87nl/laravel-cms
+```
 
 The FormBuilder and TableBuilder packages ship their own `.vue` files and have their own front-end
 dependencies. Follow their installation guides for the npm packages they need.

@@ -29,7 +29,7 @@ return [
         'llms_intro' => 'Introductie voor llms.txt',
     ],
     'help' => [
-        'title_pattern' => 'Gebruik :title voor de titel van de pagina, bijvoorbeeld ":title | Johan Montenij". Leeg betekent ":title | naam van de website".',
+        'title_pattern' => 'Gebruik :title voor de titel van de pagina, bijvoorbeeld ":title | Mijn website". Leeg betekent ":title | naam van de website".',
         'default_meta_description' => 'Voor pagina\'s zonder eigen omschrijving en zonder tekstblok.',
         'og_image_id' => 'Getoond als een pagina wordt gedeeld en zelf geen afbeelding heeft.',
         'privacy_page_id' => 'Formulieren op de site linken naar deze pagina.',

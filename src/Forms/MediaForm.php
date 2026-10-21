@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace J87NL\VueCms\Forms;
 
+use J87NL\Cms\Validation\MediaRules;
 use TranquilTools\FormBuilder\AbstractForm;
 use TranquilTools\FormBuilder\Fields\BaseField;
 use TranquilTools\FormBuilder\Fields\Number;
@@ -42,18 +43,11 @@ class MediaForm extends AbstractForm
                 ->label(__('vue-cms::media.fields.alt'))
                 ->help(__('vue-cms::media.help.alt'))
                 ->required()
-                ->rules([
-                    'string',
-                    'max:250',
-                ]),
+                ->rules(MediaRules::for('alt')),
 
             Textarea::make('caption')
                 ->label(__('vue-cms::media.fields.caption'))
-                ->rules([
-                    'nullable',
-                    'string',
-                    'max:500',
-                ]),
+                ->rules(MediaRules::for('caption')),
 
             Section::make()
                 ->title(__('vue-cms::media.sections.focal_point'))
@@ -67,9 +61,7 @@ class MediaForm extends AbstractForm
                         ->append('%')
                         ->default(50)
                         ->required()
-                        ->rules([
-                            'integer',
-                        ]),
+                        ->rules(MediaRules::for('focal_x')),
 
                     Number::make('focal_y')
                         ->label(__('vue-cms::media.fields.focal_y'))
@@ -78,9 +70,7 @@ class MediaForm extends AbstractForm
                         ->append('%')
                         ->default(50)
                         ->required()
-                        ->rules([
-                            'integer',
-                        ]),
+                        ->rules(MediaRules::for('focal_y')),
                 ]),
         ];
     }

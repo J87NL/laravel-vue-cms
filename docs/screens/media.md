@@ -48,7 +48,7 @@ The focal point is the part of the image that must stay visible when it is cropp
 
 `GET admin/cms/media/{asset}/edit` (`cms.media.edit`) shows a preview of the image and
 `J87NL\VueCms\Forms\MediaForm`, with the same `alt`, `caption`, `focal_x` and `focal_y` fields. Saving sends
-`PUT` to `cms.media.update`, which updates the `MediaAsset` directly.
+`PUT` to `cms.media.update`, which runs the `UpdateMedia` action of laravel-cms.
 
 ## Deleting
 

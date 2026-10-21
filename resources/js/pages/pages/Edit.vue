@@ -31,6 +31,7 @@ const props = defineProps<{
         createUrl: string;
     }[];
     revisions: TableData;
+    revisionsDescription: string;
     publication: {
         canPublish: boolean;
         publishUrl: string;
@@ -329,7 +330,7 @@ async function destroy(): Promise<void> {
                     {{ $t('vue-cms::pages.edit.revisions') }}
                 </h2>
                 <p :class="ui.muted">
-                    {{ $t('vue-cms::pages.edit.revisions_description') }}
+                    {{ revisionsDescription }}
                 </p>
             </div>
 

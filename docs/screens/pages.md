@@ -51,7 +51,7 @@ described in [Fields](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.
 | Search engines and sharing | `og_image_id` | A searchable list of media |
 | Search engines and sharing | `meta_description` | |
 | Search engines and sharing | `canonical_url` | |
-| Search engines and sharing | `schema_type` | One of [`vue-cms.schema_types`](../configuration.md#schema-types), or empty |
+| Search engines and sharing | `schema_type` | One of [`cms.schema_types`](../configuration.md#settings-read-from-laravel-cms), or empty |
 | Search engines and sharing | `noindex` | A toggle |
 
 ## Page editor

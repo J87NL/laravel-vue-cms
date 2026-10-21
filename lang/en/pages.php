@@ -20,7 +20,7 @@ return [
         'blocks_description' => 'The page is built from these blocks, from top to bottom. Drag to reorder.',
         'add_block' => 'Add block',
         'revisions' => 'Revisions',
-        'revisions_description' => 'Every save keeps a revision. The last 20 are kept.',
+        'revisions_description' => '{1} Every save keeps a revision. Only the last one is kept.|[2,*] Every save keeps a revision. The last :count are kept.',
         'danger' => 'Delete page',
         'danger_description' => 'Deleting removes the page, its blocks and its revisions.',
     ],

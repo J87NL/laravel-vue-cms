@@ -16,13 +16,8 @@ The boundary rule: **the core owns the data, the rules, the actions and the publ
 admin screens and saves through the core's actions.**
 
 This package holds no content logic of its own. When a screen saves something, the core action decides what is
-valid and takes care of revisions, redirects and the page cache. The core has no action for four changes, so the
-admin writes to the core's models directly:
-
-- changing the alt text, caption or focal point of an image,
-- deleting a redirect,
-- deleting a menu item,
-- reordering menu items.
+valid and takes care of revisions, redirects and the page cache. The core has no action for deleting a redirect, so
+the admin deletes that model directly.
 
 See the [actions](https://github.com/J87NL/laravel-cms/blob/main/docs/actions.md) of laravel-cms.
 
