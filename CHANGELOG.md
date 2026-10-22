@@ -4,16 +4,22 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-22
+
 ### Added
 
 - The media edit screen has a "Bestand vervangen" (replace file) section. After a confirmation it posts to the new route `cms.media.replace`, which gives the image a new file through the `ReplaceMediaFile` action of laravel-cms. The image keeps its id, alt text, caption and focal point, so every block that uses it shows the new file. The route needs `cms.media`, like the other media routes.
 - `MediaReplaceForm` validates the replacement file: required, at most `cms.media.max_upload_kilobytes`, and one of the types in `MediaReplaceForm::accept()` (the form builder's `accept()` adds the `mimetypes` rule).
 - The `cms/Form` page takes an optional `replace` prop for that section: the `MediaReplaceForm` schema, rendered with the form builder.
+- The page editor shows the pending revision of a published page (changed fields, added, changed and removed blocks, new block order) with "Publish changes" and "Discard changes" buttons. Both confirm first and need `cms.pages.publish` and the `cms.pages.write` gate. New routes `cms.pages.pending.publish` and `cms.pages.pending.discard`, and the `pendingRevision` prop of `cms/pages/Edit`.
 
 ### Changed
 
 - `MediaUploadForm` no longer adds a `max` rule when `cms.media.max_upload_kilobytes` is `0`, so `0` means no limit as documented instead of refusing every file.
 - Requires `j87nl/laravel-cms` `^0.3`, which must be tagged first. Update both packages together: `composer update j87nl/laravel-vue-cms j87nl/laravel-cms`.
+- Requires `j87nl/laravel-cms` `^0.3` for pending revisions.
+- The revision list leaves out the pending revision.
+- "Publish", "Take offline" and the schedule form also check the `cms.pages.write` gate, because taking a page offline now applies its pending revision.
 
 ## [0.2.1] - 2026-10-21
 
@@ -56,6 +62,7 @@ First release, extracted from the j87.nl app.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
 [Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.0...HEAD
+[0.3.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/J87NL/laravel-vue-cms/releases/tag/v0.1.0

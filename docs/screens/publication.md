@@ -11,7 +11,9 @@ see the buttons disabled, with a notice that explains why. See [Permissions](../
 | Button | Route | What happens |
 |---|---|---|
 | Publish | `POST` `cms.pages.publish` | `ChangePageStatus` sets the status to `published` |
-| Take offline | `POST` `cms.pages.unpublish` | `ChangePageStatus` sets the status to `unpublished` |
+| Take offline | `POST` `cms.pages.unpublish` | `ChangePageStatus` sets the status to `unpublished`, and applies a pending revision to the offline page |
+
+Both, and the schedule form, also check the `cms.pages.write` gate with the page, see [Permissions](../permissions.md#changing-a-published-page).
 
 The statuses, and when a page is public, are described in
 [Statuses](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#statuses) in the laravel-cms docs.
@@ -20,6 +22,26 @@ The statuses, and when a page is public, are described in
 
 "Take offline" is disabled, with the reason shown, for the home page and for the pages above it. The rules of the
 home page are listed in [The home page](https://github.com/J87NL/laravel-cms/blob/main/docs/pages.md#the-home-page).
+
+## Pending changes
+
+A published page can hold a pending revision: changes that are not live yet, proposed through the MCP draft tools of
+laravel-cms (see [Draft and live mode](https://github.com/J87NL/laravel-cms/blob/main/docs/mcp-tools.md#draft-and-live-mode)).
+The page editor then shows a "Changes waiting to be published" panel under the publication panel, with who proposed
+them, who changed them last and when, which page fields change, how many blocks are added, changed and removed, and
+whether their order changes. These are counted against the page as it was when the proposal started, so edits made in
+the editor in the meantime are not listed. The fields and blocks below the panel still show the live page.
+
+| Button | Route | What happens |
+|---|---|---|
+| Publish changes | `POST` `cms.pages.pending.publish` | `PublishPage` replaces the live page fields and blocks with the pending ones |
+| Discard changes | `DELETE` `cms.pages.pending.discard` | `DiscardPendingRevision` throws the pending revision away |
+
+Both ask for confirmation first and need `cms.pages.edit` and `cms.pages.publish`, and the `cms.pages.write` gate
+(see [Permissions](../permissions.md#changing-a-published-page)); without the publish permission the buttons are
+disabled with a notice. Publishing applies only what the proposal changed: edits made directly on the live page in the
+meantime stay, unless the proposal changed the same field or block. Taking the page offline applies the proposal to
+the offline page, so the panel only shows on a published page.
 
 ## Home page
 

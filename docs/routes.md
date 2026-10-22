@@ -41,6 +41,8 @@ Permissions: `cms.pages.edit` and `cms.pages.publish`.
 | `POST` | `pages/{page}/unpublish` | `cms.pages.unpublish` |
 | `POST` | `pages/{page}/home` | `cms.pages.home` |
 | `POST` | `pages/{page}/schedule` | `cms.pages.schedule` |
+| `POST` | `pages/{page}/pending/publish` | `cms.pages.pending.publish` |
+| `DELETE` | `pages/{page}/pending` | `cms.pages.pending.discard` |
 
 ## Media
 

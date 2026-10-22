@@ -43,6 +43,8 @@ Route::middleware(config('vue-cms.admin.middleware'))
                 Route::post('pages/{page}/unpublish', [PagePublicationController::class, 'unpublish'])->name('pages.unpublish');
                 Route::post('pages/{page}/home', [PagePublicationController::class, 'home'])->name('pages.home');
                 Route::post('pages/{page}/schedule', [PagePublicationController::class, 'schedule'])->name('pages.schedule');
+                Route::post('pages/{page}/pending/publish', [PagePublicationController::class, 'publishPending'])->name('pages.pending.publish');
+                Route::delete('pages/{page}/pending', [PagePublicationController::class, 'discardPending'])->name('pages.pending.discard');
             });
         });
 
