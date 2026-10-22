@@ -26,7 +26,7 @@ return [
         'no' => 'No',
         'moved' => 'Moves from position :before to :after',
         'visibility' => 'Visible: :before → :after',
-        'markup_changed' => 'Only the formatting, a link or an image changes; the text stays the same.',
+        'markup_changed' => 'Only the formatting or a link changes; the text stays the same.',
         'links' => 'Link targets',
         'no_links' => '(none)',
         'status' => [

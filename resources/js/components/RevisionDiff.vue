@@ -43,10 +43,10 @@ function isQuiet(block: CmsBlockDiff): boolean {
     return block.status === 'unchanged' && !block.moved;
 }
 
-function linkList(links: string[]): string {
+function shownLinks(links: string[]): string[] {
     return links.length > 0
-        ? links.join(', ')
-        : trans('vue-cms::revisions.diff.no_links');
+        ? links
+        : [trans('vue-cms::revisions.diff.no_links')];
 }
 
 function hasWords(change: CmsValueDiff): boolean {
@@ -187,18 +187,34 @@ function hasWords(change: CmsValueDiff): boolean {
                                 <span :class="ui.muted">
                                     {{ $t('vue-cms::revisions.diff.links') }}
                                 </span>
-                                <span
+                                <ul
                                     v-if="block.status !== 'added'"
-                                    :class="segmentClasses.removed"
+                                    class="flex flex-col gap-0.5"
                                 >
-                                    {{ linkList(change.links.before) }}
-                                </span>
-                                <span
+                                    <li
+                                        v-for="(link, index) in shownLinks(
+                                            change.links.before,
+                                        )"
+                                        :key="index"
+                                        :class="segmentClasses.removed"
+                                    >
+                                        {{ link }}
+                                    </li>
+                                </ul>
+                                <ul
                                     v-if="block.status !== 'removed'"
-                                    :class="segmentClasses.added"
+                                    class="flex flex-col gap-0.5"
                                 >
-                                    {{ linkList(change.links.after) }}
-                                </span>
+                                    <li
+                                        v-for="(link, index) in shownLinks(
+                                            change.links.after,
+                                        )"
+                                        :key="index"
+                                        :class="segmentClasses.added"
+                                    >
+                                        {{ link }}
+                                    </li>
+                                </ul>
                             </dd>
                         </div>
                     </dl>

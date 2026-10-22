@@ -108,7 +108,7 @@ The tree is rendered with the `TreeView` component of FormBuilder.
 - a field is a `CmsValueDiff`: `key`, the translated `label`, `before` and `after` as display strings (`null` when
   empty), `words`, a list of `{ type: 'equal' | 'added' | 'removed', text }` segments or `null`, `markupChanged`
   (`true` when rich text changes but its text stays the same) and `links` (`{ before: string[], after: string[] }`
-  with the `href` and `src` targets when they change, otherwise `null`);
+  with the `href`, `src` and `srcset` values when they change, otherwise `null`);
 - a block is a `CmsBlockDiff`: `id` (negative for a new block), the translated type `label`, `status` (`added`,
   `removed`, `changed` or `unchanged`), `moved`, `position` and `visible` (each `{ before, after }`) and `changes`, a
   list of `CmsValueDiff` with the block form labels.

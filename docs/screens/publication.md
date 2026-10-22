@@ -45,10 +45,11 @@ Edits made in the editor in the meantime that the proposal left alone are theref
   Removed blocks stay at the place they had. A block that changes place says from which position to which. Changed
   values are listed by the label of the block form field (for repeaters with the item number, for example
   "Tiles › 2 › Name"); rich text is compared as plain text with a word-level diff, other text values too. When rich
-  text changes but its text stays the same (only formatting, a link or an image), a notice says so. Changed link and
-  image targets (`href` and `src`) are listed under "Link targets", old and new, so a changed link is never hidden. A
-  change of visibility is shown as "Visible: Yes → No". Unchanged blocks are dimmed. A removed block stays after the
-  nearest block before it that keeps its place.
+  text changes but its text stays the same (only formatting or a link), a notice says so. Changed link targets
+  (`href`, and `src` and `srcset` where a block allows them) are listed under "Link targets", old and new, one per
+  line, so a changed link is never hidden. A change of visibility is shown as "Visible: Yes → No". Unchanged blocks
+  are dimmed. A removed block stays after the nearest block before it that keeps its place, or before the nearest
+  block after it that keeps its place when there is none.
 
 "Preview with changes" opens a signed, expiring, `noindex` preview of the page with the proposal applied
 (`PreviewController::pendingUrl()` of laravel-cms, see

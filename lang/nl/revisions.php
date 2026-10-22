@@ -26,7 +26,7 @@ return [
         'no' => 'Nee',
         'moved' => 'Verhuist van positie :before naar :after',
         'visibility' => 'Zichtbaar: :before → :after',
-        'markup_changed' => 'Alleen de opmaak, een link of een afbeelding verandert; de tekst blijft gelijk.',
+        'markup_changed' => 'Alleen de opmaak of een link verandert; de tekst blijft gelijk.',
         'links' => 'Linkdoelen',
         'no_links' => '(geen)',
         'status' => [
