@@ -71,5 +71,6 @@ These checks need a logged-in user inside the TableBuilder routes. Set `table-bu
 ## Preview links
 
 The preview link on the page editor is a temporary signed URL from laravel-cms. Anyone who has the link can see the page
-until it expires, also when the page is not published. See
+until it expires, also when the page is not published. The same holds for the "Preview with changes" link of a
+pending revision. Both links are only handed out on the page editor, which needs `cms.pages.edit`. See
 [Previews](https://github.com/J87NL/laravel-cms/blob/main/docs/previews.md).

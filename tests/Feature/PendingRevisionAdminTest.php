@@ -295,3 +295,115 @@ test('scheduling respects the page write gate', function (): void {
 
     expect($page->fresh()->unpublish_at)->toBeNull();
 });
+
+test('the page editor shows what the pending revision changes compared with the live page', function (): void {
+    [$page, $kept, $changed, $removed] = pendingAdminPage();
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $response = $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.pendingRevision.diff.fields.0', [
+            'key' => 'title',
+            'label' => __('vue-cms::pages.fields.title'),
+            'before' => 'Live',
+            'after' => 'Nieuw',
+            'words' => [
+                ['type' => 'removed', 'text' => 'Live'],
+                ['type' => 'added', 'text' => 'Nieuw'],
+            ],
+        ])
+        ->assertJsonPath('props.pendingRevision.diff.fields.1.key', 'meta_description')
+        ->assertJsonPath('props.pendingRevision.diff.fields.1.before', null)
+        ->assertJsonPath('props.pendingRevision.diff.fields.1.after', 'Beschrijving');
+
+    $blocks = $response->json('props.pendingRevision.diff.blocks');
+
+    expect(array_map(fn (array $block): array => [$block['id'], $block['status']], $blocks))->toBe([
+        [$kept->id, 'unchanged'],
+        [$changed->id, 'changed'],
+        [$removed->id, 'removed'],
+        [-1, 'added'],
+    ])
+        ->and($blocks[1]['label'])->toBe(__('cms::blocks.rich_text.label'))
+        ->and($blocks[1]['changes'])->toBe([
+            [
+                'key' => 'html',
+                'label' => __('cms::blocks.rich_text.fields.html'),
+                'before' => 'Oud',
+                'after' => 'Nieuw',
+                'words' => [
+                    ['type' => 'removed', 'text' => 'Oud'],
+                    ['type' => 'added', 'text' => 'Nieuw'],
+                ],
+            ],
+        ])
+        ->and($blocks[3]['changes'][0]['after'])->toBe('Erbij');
+});
+
+test('the diff labels nested block values with the labels of the block form', function (): void {
+    $page = makePage([
+        'title' => 'Live',
+    ], PageStatus::Published);
+    $registry = app(BlockRegistry::class);
+    $tiles = app(SaveBlock::class)->handle($page, new Block, $registry->find('link_tiles'), [
+        'tiles' => [
+            ['name' => 'Bakker', 'url' => 'https://bakker.example'],
+        ],
+    ], null);
+
+    app(PendingRevisionEditor::class)->updateBlock($page, $tiles->id, $registry->find('link_tiles'), [
+        'tiles' => [
+            ['name' => 'Slager', 'url' => 'https://bakker.example'],
+        ],
+    ], null);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.key', 'tiles.0.name')
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.label', sprintf(
+            '%s › 1 › %s',
+            __('cms::blocks.link_tiles.fields.tiles'),
+            __('cms::blocks.link_tiles.fields.name'),
+        ));
+});
+
+test('the page editor links to a signed noindex preview of the pending revision', function (): void {
+    [$page] = pendingAdminPage();
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $previewUrl = $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->json('props.pendingRevision.previewUrl');
+
+    expect($previewUrl)->toContain(sprintf('/cms/preview/%d/pending', $page->id))
+        ->toContain('signature=');
+
+    $this->get($previewUrl)
+        ->assertOk()
+        ->assertSee('Erbij', false)
+        ->assertSee('Nieuw', false)
+        ->assertDontSee('Weg', false)
+        ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+
+    $this->get(sprintf('/cms/preview/%d/pending', $page->id))->assertForbidden();
+});
+
+test('without the edit permission there is no page editor, so no diff and no preview link', function (): void {
+    [$page] = pendingAdminPage();
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesPublish->value,
+    ]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())->assertForbidden();
+});

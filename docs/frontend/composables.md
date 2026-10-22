@@ -77,6 +77,9 @@ export type CmsTreeDrop = {
 };
 ```
 
+`CmsRevisionDiff`, `CmsBlockDiff`, `CmsValueDiff` and `CmsWordSegment` describe the comparison of a pending revision
+with the live page, see [Vue pages](vue-pages.md#cmspagesedit).
+
 ## Class names
 
 `@cms/ui` exports `ui`, an object of Tailwind class strings the pages use: `button`, `primaryButton`,

@@ -2,6 +2,8 @@
 
 Inertia and Vue admin for [`j87nl/laravel-cms`](https://github.com/J87NL/laravel-cms): pages, blocks, media, menus, redirects and site settings, built on TranquilTools FormBuilder and TableBuilder.
 
+When a published page has pending changes (proposed through the MCP draft tools of laravel-cms), the page editor shows what they change compared with the live page, block by block with a word-level diff of the text, and links to a signed preview of the page with the changes applied. See [Publication](docs/screens/publication.md#what-changes).
+
 The Vue pages stay inside the package. The app's Inertia resolver loads them from the package, and an app overrides a single page through the configurable page names in `config/vue-cms.php`.
 
 ## Requirements
