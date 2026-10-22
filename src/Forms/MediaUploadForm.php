@@ -31,12 +31,28 @@ class MediaUploadForm extends AbstractForm
                 ->required()
                 ->rules([
                     'file',
-                    sprintf('max:%d', (int) config('cms.media.max_upload_kilobytes', 10240)),
+                    ...self::sizeRules(),
                 ]),
 
             ...MediaForm::detailFields(),
 
             Submit::make()->label(__('vue-cms::media.actions.upload')),
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function sizeRules(): array
+    {
+        $maxKilobytes = (int) config('cms.media.max_upload_kilobytes', 10240);
+
+        if ($maxKilobytes <= 0) {
+            return [];
+        }
+
+        return [
+            sprintf('max:%d', $maxKilobytes),
         ];
     }
 }

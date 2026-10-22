@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use J87NL\Cms\Actions\UpdateMedia;
 use J87NL\Cms\CmsPermission;
@@ -141,4 +142,141 @@ test('the upload refuses a file above the configured size', function (): void {
 
     expect(MediaAsset::query()
         ->count())->toBe(0);
+});
+
+test('replacing the file keeps the asset, its details and the blocks that use it', function (): void {
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 1200, 800),
+        'alt' => 'The beach',
+        'caption' => 'Cap Blanc-Nez',
+        'focal_x' => 30,
+        'focal_y' => 70,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+    $oldPath = $asset->file()->getPathRelativeToRoot();
+
+    $page = makePage();
+    $block = Block::query()
+        ->forceCreate([
+            'page_id' => $page->id,
+            'type' => 'image',
+            'data' => [
+                'media_id' => $asset->id,
+            ],
+        ]);
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => UploadedFile::fake()->image('dunes.png', 640, 480),
+    ])->assertRedirect(route('cms.media.edit', $asset));
+
+    $asset = MediaAsset::query()
+        ->sole();
+
+    expect($asset->only(['alt', 'caption', 'focal_x', 'focal_y']))->toBe([
+        'alt' => 'The beach',
+        'caption' => 'Cap Blanc-Nez',
+        'focal_x' => 30,
+        'focal_y' => 70,
+    ])->and($asset->width())->toBe(640)
+        ->and($asset->file()->file_name)->toBe('dunes.png')
+        ->and($block->fresh()->data['media_id'])->toBe($asset->id);
+
+    Storage::disk('public')->assertMissing($oldPath);
+});
+
+test('a replacement that is not an image is refused and keeps the current file', function (): void {
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+    $mediaId = $asset->file()->id;
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => UploadedFile::fake()->create('notes.pdf', 10, 'application/pdf'),
+    ])->assertSessionHasErrors('file');
+
+    $this->post(route('cms.media.replace', $asset), [])->assertSessionHasErrors('file');
+
+    expect($asset->fresh()->file()->id)->toBe($mediaId);
+});
+
+test('the edit screen sends the replace form, and without the media permission the screen and the replacement are forbidden', function (): void {
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+    $mediaId = $asset->file()->id;
+
+    $this->get(route('cms.media.edit', $asset), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.replace.action', route('cms.media.replace', $asset))
+        ->assertJsonPath('props.replace.method', 'POST')
+        ->assertJsonPath('props.replace.fields.0.name', 'file')
+        ->assertJsonPath('props.replace.fields.0.accept', MediaAsset::ACCEPTED_MIME_TYPES);
+
+    Gate::define(CmsPermission::Media->value, fn (): bool => false);
+
+    $this->get(route('cms.media.edit', $asset))->assertForbidden();
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => UploadedFile::fake()->image('other.jpg', 800, 600),
+    ])->assertForbidden();
+
+    expect($asset->fresh()->file()->id)->toBe($mediaId);
+});
+
+test('a replacement above the configured size or disguised as an image is refused', function (UploadedFile $file): void {
+    config()->set('cms.media.max_upload_kilobytes', 50);
+
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ]);
+
+    $asset = MediaAsset::query()
+        ->sole();
+    $mediaId = $asset->file()->id;
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => $file,
+    ])->assertSessionHasErrors('file');
+
+    expect($asset->fresh()->file()->id)->toBe($mediaId);
+})->with([
+    'too large' => fn () => UploadedFile::fake()->image('big.jpg', 800, 600)->size(51),
+    'disguised' => fn () => UploadedFile::fake()->createWithContent('photo.jpg', '%PDF-1.4 not an image'),
+]);
+
+test('a max upload size of zero lets large uploads and replacements through', function (): void {
+    config()->set('cms.media.max_upload_kilobytes', 0);
+
+    $this->post(route('cms.media.store'), [
+        'file' => UploadedFile::fake()->image('photo.jpg', 800, 600)->size(20_000),
+        'alt' => 'Photo',
+        'focal_x' => 50,
+        'focal_y' => 50,
+    ])->assertSessionHasNoErrors();
+
+    $asset = MediaAsset::query()
+        ->sole();
+
+    $this->post(route('cms.media.replace', $asset), [
+        'file' => UploadedFile::fake()->image('other.png', 640, 480)->size(20_000),
+    ])->assertSessionHasNoErrors();
+
+    expect($asset->fresh()->width())->toBe(640);
 });

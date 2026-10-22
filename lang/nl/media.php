@@ -16,6 +16,7 @@ return [
     ],
     'sections' => [
         'focal_point' => 'Focuspunt',
+        'replace' => 'Bestand vervangen',
     ],
     'fields' => [
         'file' => 'Afbeelding',
@@ -29,6 +30,7 @@ return [
     'help' => [
         'alt' => 'Beschrijf wat er op de afbeelding staat, voor bezoekers die hem niet kunnen zien.',
         'focal_point' => 'Het deel van de afbeelding dat zichtbaar moet blijven als hij wordt bijgesneden, als percentage vanaf links en vanaf boven.',
+        'replace' => 'Kies een nieuwe afbeelding. Alternatieve tekst, onderschrift en focuspunt blijven, en elke pagina die deze afbeelding gebruikt toont meteen het nieuwe bestand.',
     ],
     'actions' => [
         'upload' => 'Uploaden',
@@ -36,10 +38,13 @@ return [
         'edit' => 'Bewerken',
         'delete' => 'Verwijderen',
         'delete_confirm' => 'Deze afbeelding verwijderen?',
+        'replace' => 'Bestand vervangen',
+        'replace_confirm' => 'Het huidige bestand vervangen? Het oude bestand wordt verwijderd, en niet opgeslagen wijzigingen in het formulier gaan verloren.',
     ],
     'flash' => [
         'uploaded' => 'Afbeelding geüpload.',
         'saved' => 'Afbeelding opgeslagen.',
         'deleted' => 'Afbeelding verwijderd.',
+        'replaced' => 'Bestand vervangen.',
     ],
 ];

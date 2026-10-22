@@ -4,6 +4,17 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- The media edit screen has a "Bestand vervangen" (replace file) section. After a confirmation it posts to the new route `cms.media.replace`, which gives the image a new file through the `ReplaceMediaFile` action of laravel-cms. The image keeps its id, alt text, caption and focal point, so every block that uses it shows the new file. The route needs `cms.media`, like the other media routes.
+- `MediaReplaceForm` validates the replacement file: required, at most `cms.media.max_upload_kilobytes`, and one of the types in `MediaReplaceForm::accept()` (the form builder's `accept()` adds the `mimetypes` rule).
+- The `cms/Form` page takes an optional `replace` prop for that section: the `MediaReplaceForm` schema, rendered with the form builder.
+
+### Changed
+
+- `MediaUploadForm` no longer adds a `max` rule when `cms.media.max_upload_kilobytes` is `0`, so `0` means no limit as documented instead of refusing every file.
+- Requires `j87nl/laravel-cms` `^0.3`, which must be tagged first. Update both packages together: `composer update j87nl/laravel-vue-cms j87nl/laravel-cms`.
+
 ## [0.2.1] - 2026-10-21
 
 ### Removed

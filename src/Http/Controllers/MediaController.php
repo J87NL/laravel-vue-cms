@@ -11,10 +11,12 @@ use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use J87NL\Cms\Actions\DeleteMedia;
+use J87NL\Cms\Actions\ReplaceMediaFile;
 use J87NL\Cms\Actions\UpdateMedia;
 use J87NL\Cms\Actions\UploadMedia;
 use J87NL\Cms\Models\MediaAsset;
 use J87NL\VueCms\Forms\MediaForm;
+use J87NL\VueCms\Forms\MediaReplaceForm;
 use J87NL\VueCms\Forms\MediaUploadForm;
 use J87NL\VueCms\Tables\MediaTable;
 
@@ -76,6 +78,9 @@ class MediaController extends Controller
                 'alt' => $asset->alt,
                 'objectPosition' => $asset->objectPosition(),
             ],
+            'replace' => MediaReplaceForm::make()
+                ->action(route('cms.media.replace', $asset))
+                ->method('POST'),
             'form' => MediaForm::make()
                 ->action(route('cms.media.update', $asset))
                 ->method('PUT')
@@ -95,6 +100,23 @@ class MediaController extends Controller
         $this->toast(__('vue-cms::media.flash.saved'));
 
         return to_route('cms.media.index');
+    }
+
+    public function replace(Request $request, MediaAsset $asset, ReplaceMediaFile $replaceMediaFile): RedirectResponse
+    {
+        MediaReplaceForm::make()->validate($request);
+
+        $file = $request->file('file');
+
+        if (! $file instanceof UploadedFile) {
+            abort(422);
+        }
+
+        $replaceMediaFile->handle($asset, $file);
+
+        $this->toast(__('vue-cms::media.flash.replaced'));
+
+        return to_route('cms.media.edit', $asset);
     }
 
     public function destroy(MediaAsset $asset, DeleteMedia $deleteMedia): RedirectResponse

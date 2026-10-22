@@ -2,7 +2,10 @@
 import Form from '@form-builder/components/Form.vue';
 import type { FormSchema } from '@form-builder/types/form-builder';
 import { Head, Link } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
+import { computed, ref } from 'vue';
 import { useBreadcrumbs } from '@cms/composables/useBreadcrumbs';
+import { useConfirm } from '@cms/composables/useConfirm';
 import type { CmsBreadcrumb } from '@cms/types';
 import { ui } from '@cms/ui';
 
@@ -17,9 +20,40 @@ const props = defineProps<{
         alt: string;
         objectPosition: string;
     } | null;
+    replace?: FormSchema | null;
 }>();
 
 useBreadcrumbs(() => props.breadcrumbs);
+
+const confirm = useConfirm();
+
+type ReplaceForm = {
+    submit: () => void;
+    form: {
+        file: unknown;
+        processing: boolean;
+    };
+};
+
+const replaceForm = ref<ReplaceForm | null>(null);
+
+const canReplace = computed(
+    () =>
+        replaceForm.value?.form.file instanceof File &&
+        !replaceForm.value.form.processing,
+);
+
+async function replaceFile(): Promise<void> {
+    if (!replaceForm.value || !canReplace.value) {
+        return;
+    }
+
+    if (!(await confirm(trans('vue-cms::media.actions.replace_confirm')))) {
+        return;
+    }
+
+    replaceForm.value.submit();
+}
 </script>
 
 <template>
@@ -47,6 +81,34 @@ useBreadcrumbs(() => props.breadcrumbs);
 
         <section :class="ui.panel">
             <Form :schema="form" />
+        </section>
+
+        <section v-if="replace && $can('cms.media')" :class="ui.panel">
+            <div class="flex flex-col gap-1">
+                <h2 :class="ui.heading">
+                    {{ $t('vue-cms::media.sections.replace') }}
+                </h2>
+                <p :class="ui.muted">
+                    {{ $t('vue-cms::media.help.replace') }}
+                </p>
+            </div>
+
+            <Form
+                ref="replaceForm"
+                :schema="replace"
+                :options="{ preserveScroll: true }"
+            />
+
+            <div :class="ui.toolbar">
+                <button
+                    type="button"
+                    :class="ui.button"
+                    :disabled="!canReplace"
+                    @click="replaceFile"
+                >
+                    {{ $t('vue-cms::media.actions.replace') }}
+                </button>
+            </div>
         </section>
     </div>
 </template>
