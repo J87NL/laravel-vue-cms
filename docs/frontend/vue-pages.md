@@ -99,14 +99,16 @@ The tree is rendered with the `TreeView` component of FormBuilder.
 | `fields` | `string[]` | Translated labels of the page fields the proposal changes |
 | `blocks` | `{ added: number, changed: number, removed: number, reordered: boolean }` | Block changes compared with the live page |
 | `diff` | `CmsRevisionDiff` | The comparison with the live page, rendered by `components/RevisionDiff.vue`, see below |
-| `previewUrl` | `string` | The signed preview of the page with the pending revision applied |
+| `previewUrl` | `string` | The signed preview of the page with the pending revision applied. It needs a signed-in user with `cms.pages.edit` and stops working once this revision is no longer pending |
 | `publishUrl` | `string` | |
 | `discardUrl` | `string` | |
 
 `CmsRevisionDiff` (in `@cms/types`) has `fields` and `blocks`:
 
 - a field is a `CmsValueDiff`: `key`, the translated `label`, `before` and `after` as display strings (`null` when
-  empty) and `words`, a list of `{ type: 'equal' | 'added' | 'removed', text }` segments or `null`;
+  empty), `words`, a list of `{ type: 'equal' | 'added' | 'removed', text }` segments or `null`, `markupChanged`
+  (`true` when rich text changes but its text stays the same) and `links` (`{ before: string[], after: string[] }`
+  with the `href` and `src` targets when they change, otherwise `null`);
 - a block is a `CmsBlockDiff`: `id` (negative for a new block), the translated type `label`, `status` (`added`,
   `removed`, `changed` or `unchanged`), `moved`, `position` and `visible` (each `{ before, after }`) and `changes`, a
   list of `CmsValueDiff` with the block form labels.

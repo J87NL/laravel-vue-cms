@@ -44,14 +44,19 @@ Edits made in the editor in the meantime that the proposal left alone are theref
 - **Blocks:** all blocks in their order after publishing, each with a badge: Added, Removed, Changed or Unchanged.
   Removed blocks stay at the place they had. A block that changes place says from which position to which. Changed
   values are listed by the label of the block form field (for repeaters with the item number, for example
-  "Tiles › 2 › Name"); rich text is compared as plain text with a word-level diff, other text values too. A change of
-  visibility is shown as "Visible: Yes → No". Unchanged blocks are dimmed.
+  "Tiles › 2 › Name"); rich text is compared as plain text with a word-level diff, other text values too. When rich
+  text changes but its text stays the same (only formatting, a link or an image), a notice says so. Changed link and
+  image targets (`href` and `src`) are listed under "Link targets", old and new, so a changed link is never hidden. A
+  change of visibility is shown as "Visible: Yes → No". Unchanged blocks are dimmed. A removed block stays after the
+  nearest block before it that keeps its place.
 
 "Preview with changes" opens a signed, expiring, `noindex` preview of the page with the proposal applied
 (`PreviewController::pendingUrl()` of laravel-cms, see
 [Previewing a pending revision](https://github.com/J87NL/laravel-cms/blob/main/docs/previews.md#previewing-a-pending-revision)).
 Nothing is written. The panel, the comparison and the link are only part of the page editor, which needs
-`cms.pages.edit`.
+`cms.pages.edit`. The preview itself also needs a signed-in user with `cms.pages.edit`, so a forwarded link does not
+open for anyone else. The link belongs to the pending revision it was made for: once that is published or discarded,
+it answers 404, also when a new proposal has started since.
 
 | Button | Route | What happens |
 |---|---|---|

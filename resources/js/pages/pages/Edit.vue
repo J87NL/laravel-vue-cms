@@ -371,6 +371,7 @@ async function destroy(): Promise<void> {
                         </p>
                     </div>
                     <a
+                        v-if="$can('cms.pages.edit')"
                         :href="pendingRevision.previewUrl"
                         target="_blank"
                         rel="noopener"

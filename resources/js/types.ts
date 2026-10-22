@@ -33,6 +33,11 @@ export type CmsValueDiff = {
     before: string | null;
     after: string | null;
     words: CmsWordSegment[] | null;
+    markupChanged: boolean;
+    links: {
+        before: string[];
+        after: string[];
+    } | null;
 };
 
 export type CmsBlockDiff = {

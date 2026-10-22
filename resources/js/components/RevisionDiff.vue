@@ -43,6 +43,12 @@ function isQuiet(block: CmsBlockDiff): boolean {
     return block.status === 'unchanged' && !block.moved;
 }
 
+function linkList(links: string[]): string {
+    return links.length > 0
+        ? links.join(', ')
+        : trans('vue-cms::revisions.diff.no_links');
+}
+
 function hasWords(change: CmsValueDiff): boolean {
     return change.words !== null && change.words.length > 0;
 }
@@ -162,6 +168,36 @@ function hasWords(change: CmsValueDiff): boolean {
                                     :class="segmentClasses.added"
                                 >
                                     {{ shown(change.after) }}
+                                </span>
+                            </dd>
+                            <dd
+                                v-if="change.markupChanged"
+                                :class="ui.notice"
+                                data-test="diff-markup-changed"
+                            >
+                                {{
+                                    $t('vue-cms::revisions.diff.markup_changed')
+                                }}
+                            </dd>
+                            <dd
+                                v-if="change.links"
+                                class="flex flex-col gap-0.5 break-all"
+                                data-test="diff-links"
+                            >
+                                <span :class="ui.muted">
+                                    {{ $t('vue-cms::revisions.diff.links') }}
+                                </span>
+                                <span
+                                    v-if="block.status !== 'added'"
+                                    :class="segmentClasses.removed"
+                                >
+                                    {{ linkList(change.links.before) }}
+                                </span>
+                                <span
+                                    v-if="block.status !== 'removed'"
+                                    :class="segmentClasses.added"
+                                >
+                                    {{ linkList(change.links.after) }}
                                 </span>
                             </dd>
                         </div>

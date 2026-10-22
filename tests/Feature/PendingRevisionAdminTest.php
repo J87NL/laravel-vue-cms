@@ -314,6 +314,8 @@ test('the page editor shows what the pending revision changes compared with the 
                 ['type' => 'removed', 'text' => 'Live'],
                 ['type' => 'added', 'text' => 'Nieuw'],
             ],
+            'markupChanged' => false,
+            'links' => null,
         ])
         ->assertJsonPath('props.pendingRevision.diff.fields.1.key', 'meta_description')
         ->assertJsonPath('props.pendingRevision.diff.fields.1.before', null)
@@ -338,6 +340,8 @@ test('the page editor shows what the pending revision changes compared with the 
                     ['type' => 'removed', 'text' => 'Oud'],
                     ['type' => 'added', 'text' => 'Nieuw'],
                 ],
+                'markupChanged' => false,
+                'links' => null,
             ],
         ])
         ->and($blocks[3]['changes'][0]['after'])->toBe('Erbij');
@@ -385,7 +389,7 @@ test('the page editor links to a signed noindex preview of the pending revision'
         ->assertOk()
         ->json('props.pendingRevision.previewUrl');
 
-    expect($previewUrl)->toContain(sprintf('/cms/preview/%d/pending', $page->id))
+    expect($previewUrl)->toContain(sprintf('/cms/preview/%d/pending/%d', $page->id, $page->pendingRevision()->firstOrFail()->id))
         ->toContain('signature=');
 
     $this->get($previewUrl)
@@ -395,7 +399,40 @@ test('the page editor links to a signed noindex preview of the pending revision'
         ->assertDontSee('Weg', false)
         ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
 
-    $this->get(sprintf('/cms/preview/%d/pending', $page->id))->assertForbidden();
+    $this->get(sprintf('/cms/preview/%d/pending/%d', $page->id, $page->pendingRevision()->firstOrFail()->id))->assertForbidden();
+
+    auth()->logout();
+
+    $this->getJson($previewUrl)->assertUnauthorized();
+});
+
+test('the diff flags a change of only the markup and lists changed link targets', function (): void {
+    $page = makePage([
+        'title' => 'Live',
+    ], PageStatus::Published);
+    $registry = app(BlockRegistry::class);
+    $text = app(SaveBlock::class)->handle($page, new Block, $registry->find('rich_text'), [
+        'html' => '<p>Lees <a href="https://example.com/info">meer</a></p>',
+    ], null);
+
+    app(PendingRevisionEditor::class)->updateBlock($page, $text->id, $registry->find('rich_text'), [
+        'html' => '<p>Lees <a href="https://evil.example/info">meer</a></p>',
+    ], null);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.status', 'changed')
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.before', 'Lees meer')
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.after', 'Lees meer')
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.markupChanged', true)
+        ->assertJsonPath('props.pendingRevision.diff.blocks.0.changes.0.links', [
+            'before' => ['https://example.com/info'],
+            'after' => ['https://evil.example/info'],
+        ]);
 });
 
 test('without the edit permission there is no page editor, so no diff and no preview link', function (): void {

@@ -39,7 +39,7 @@ class PendingRevisionSummary
             return null;
         }
 
-        $diff = $this->diffPendingRevision->handle($page);
+        $diff = $this->diffPendingRevision->handle($page, $revision);
 
         if (is_null($diff)) {
             return null;
@@ -65,7 +65,7 @@ class PendingRevisionSummary
                 'fields' => array_map(fn (array $field): array => $this->field($field), $diff['fields']),
                 'blocks' => array_map(fn (array $block): array => $this->block($block), $diff['blocks']),
             ],
-            'previewUrl' => PreviewController::pendingUrl($page),
+            'previewUrl' => PreviewController::pendingUrl($page, $revision),
             'publishUrl' => route('cms.pages.pending.publish', $page),
             'discardUrl' => route('cms.pages.pending.discard', $page),
         ];
@@ -86,11 +86,13 @@ class PendingRevisionSummary
             'before' => $before,
             'after' => $after,
             'words' => $this->textField($field['field']) && ! is_null($before) && ! is_null($after) ? WordDiff::words($before, $after) : null,
+            'markupChanged' => false,
+            'links' => null,
         ];
     }
 
     /**
-     * @param  array{id: int, type: string, label: string, status: string, moved: bool, position: array{before: int|null, after: int|null}, visible: array{before: bool|null, after: bool|null}, changes: list<array{key: string, before: mixed, after: mixed, words: list<array{type: string, text: string}>|null}>}  $block
+     * @param  array{id: int, type: string, label: string, status: string, moved: bool, position: array{before: int|null, after: int|null}, visible: array{before: bool|null, after: bool|null}, changes: list<array{key: string, before: mixed, after: mixed, words: list<array{type: string, text: string}>|null, markup_changed: bool, links: array{before: list<string>, after: list<string>}|null}>}  $block
      * @return array<string, mixed>
      */
     private function block(array $block): array
@@ -108,6 +110,8 @@ class PendingRevisionSummary
                 'before' => $this->value($change['before']),
                 'after' => $this->value($change['after']),
                 'words' => $change['words'],
+                'markupChanged' => $change['markup_changed'],
+                'links' => $change['links'],
             ], $block['changes']),
         ];
     }
