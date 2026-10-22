@@ -78,10 +78,9 @@ class MediaController extends Controller
                 'alt' => $asset->alt,
                 'objectPosition' => $asset->objectPosition(),
             ],
-            'replace' => [
-                'url' => route('cms.media.replace', $asset),
-                'accept' => MediaReplaceForm::accept(),
-            ],
+            'replace' => MediaReplaceForm::make()
+                ->action(route('cms.media.replace', $asset))
+                ->method('POST'),
             'form' => MediaForm::make()
                 ->action(route('cms.media.update', $asset))
                 ->method('PUT')

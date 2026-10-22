@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import Form from '@form-builder/components/Form.vue';
 import type { FormSchema } from '@form-builder/types/form-builder';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { trans } from 'laravel-vue-i18n';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useBreadcrumbs } from '@cms/composables/useBreadcrumbs';
 import { useConfirm } from '@cms/composables/useConfirm';
-import { useErrors } from '@cms/composables/useErrors';
 import type { CmsBreadcrumb } from '@cms/types';
 import { ui } from '@cms/ui';
 
@@ -21,30 +20,31 @@ const props = defineProps<{
         alt: string;
         objectPosition: string;
     } | null;
-    replace?: {
-        url: string;
-        accept: string[];
-    } | null;
+    replace?: FormSchema | null;
 }>();
 
 useBreadcrumbs(() => props.breadcrumbs);
 
 const confirm = useConfirm();
 
-const replaceErrors = useErrors(['file']);
+type ReplaceForm = {
+    submit: () => void;
+    form: {
+        file: unknown;
+        processing: boolean;
+    };
+};
 
-const replacement = ref<File | null>(null);
+const replaceForm = ref<ReplaceForm | null>(null);
 
-const replacing = ref(false);
-
-function pick(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    replacement.value = input.files?.[0] ?? null;
-}
+const canReplace = computed(
+    () =>
+        replaceForm.value?.form.file instanceof File &&
+        !replaceForm.value.form.processing,
+);
 
 async function replaceFile(): Promise<void> {
-    if (!props.replace || !replacement.value) {
+    if (!replaceForm.value || !canReplace.value) {
         return;
     }
 
@@ -52,23 +52,7 @@ async function replaceFile(): Promise<void> {
         return;
     }
 
-    router.post(
-        props.replace.url,
-        { file: replacement.value },
-        {
-            forceFormData: true,
-            preserveScroll: true,
-            onStart: () => {
-                replacing.value = true;
-            },
-            onFinish: () => {
-                replacing.value = false;
-            },
-            onSuccess: () => {
-                replacement.value = null;
-            },
-        },
-    );
+    replaceForm.value.submit();
 }
 </script>
 
@@ -109,23 +93,17 @@ async function replaceFile(): Promise<void> {
                 </p>
             </div>
 
-            <p v-for="error in replaceErrors" :key="error" :class="ui.error">
-                {{ error }}
-            </p>
+            <Form
+                ref="replaceForm"
+                :schema="replace"
+                :options="{ preserveScroll: true }"
+            />
 
             <div :class="ui.toolbar">
-                <input
-                    type="file"
-                    :accept="replace.accept.join(',')"
-                    :aria-label="$t('vue-cms::media.fields.file')"
-                    class="text-sm"
-                    @change="pick"
-                />
-
                 <button
                     type="button"
                     :class="ui.button"
-                    :disabled="!replacement || replacing"
+                    :disabled="!canReplace"
                     @click="replaceFile"
                 >
                     {{ $t('vue-cms::media.actions.replace') }}

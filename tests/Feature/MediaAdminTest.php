@@ -207,7 +207,7 @@ test('a replacement that is not an image is refused and keeps the current file',
     expect($asset->fresh()->file()->id)->toBe($mediaId);
 });
 
-test('the edit screen sends the replace url, and without the media permission the screen and the replacement are forbidden', function (): void {
+test('the edit screen sends the replace form, and without the media permission the screen and the replacement are forbidden', function (): void {
     $this->post(route('cms.media.store'), [
         'file' => UploadedFile::fake()->image('photo.jpg', 800, 600),
         'alt' => 'Photo',
@@ -221,7 +221,10 @@ test('the edit screen sends the replace url, and without the media permission th
 
     $this->get(route('cms.media.edit', $asset), $this->inertiaHeaders())
         ->assertOk()
-        ->assertJsonPath('props.replace.url', route('cms.media.replace', $asset));
+        ->assertJsonPath('props.replace.action', route('cms.media.replace', $asset))
+        ->assertJsonPath('props.replace.method', 'POST')
+        ->assertJsonPath('props.replace.fields.0.name', 'file')
+        ->assertJsonPath('props.replace.fields.0.accept', MediaAsset::ACCEPTED_MIME_TYPES);
 
     Gate::define(CmsPermission::Media->value, fn (): bool => false);
 
