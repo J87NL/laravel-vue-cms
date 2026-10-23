@@ -4,6 +4,8 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-23
+
 ### Added
 
 - The "Changes waiting to be published" panel of the page editor shows what the pending revision changes compared with the live page: changed page fields with their live and new value (a word-level diff for text fields), and every block with its status (added, removed, changed, unchanged), a position change, a visibility change and its changed values by form label, rich text as a word-level diff of the plain text. The comparison comes from the `DiffPendingRevision` action of laravel-cms; the new component `resources/js/components/RevisionDiff.vue` renders it.
@@ -15,7 +17,7 @@ All notable changes to this package are documented here. The format follows [Kee
 ### Changed
 
 - The pending revision summary (`fields` and the block counts) now compares with the live page, as publishing would apply it, instead of with the page as it was when the proposal started.
-- Requires `j87nl/laravel-cms` `^0.4` (for `DiffPendingRevision` and `PreviewController::pendingUrl()`).
+- Requires `j87nl/laravel-cms` `^0.4` (for `DiffPendingRevision` and `PreviewController::pendingUrl()`). Update both packages together: `composer update j87nl/laravel-vue-cms j87nl/laravel-cms`.
 
 ## [0.3.0] - 2026-10-22
 
@@ -74,7 +76,8 @@ First release, extracted from the j87.nl app.
 - Media, menus, redirects with CSV import, and site settings.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
-[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.1.0...v0.2.0
