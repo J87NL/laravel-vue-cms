@@ -4,6 +4,19 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- The "Changes waiting to be published" panel of the page editor shows what the pending revision changes compared with the live page: changed page fields with their live and new value (a word-level diff for text fields), and every block with its status (added, removed, changed, unchanged), a position change, a visibility change and its changed values by form label, rich text as a word-level diff of the plain text. The comparison comes from the `DiffPendingRevision` action of laravel-cms; the new component `resources/js/components/RevisionDiff.vue` renders it.
+- The comparison flags a rich text change that leaves the text alone ("only the formatting or a link changes") and lists changed link targets, old and new, one per line.
+- A "Preview with changes" link on that panel, shown with `cms.pages.edit`, opens a signed, expiring, `noindex` preview of the page with the pending revision applied (`PreviewController::pendingUrl()` of laravel-cms). The preview needs a signed-in user with `cms.pages.edit` and stops working once the revision is no longer pending.
+- `pendingRevision.diff` and `pendingRevision.previewUrl` props on `cms/pages/Edit`, with the types `CmsRevisionDiff`, `CmsBlockDiff`, `CmsValueDiff` and `CmsWordSegment` in `@cms/types`.
+- Translations under `vue-cms::revisions.diff`.
+
+### Changed
+
+- The pending revision summary (`fields` and the block counts) now compares with the live page, as publishing would apply it, instead of with the page as it was when the proposal started.
+- Requires `j87nl/laravel-cms` `^0.4` (for `DiffPendingRevision` and `PreviewController::pendingUrl()`).
+
 ## [0.3.0] - 2026-10-22
 
 ### Added

@@ -5,10 +5,11 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import TableBuilder from '@table-builder/components/TableBuilder.vue';
 import type { TableData } from '@table-builder/types/table-builder';
 import { trans } from 'laravel-vue-i18n';
+import RevisionDiff from '@cms/components/RevisionDiff.vue';
 import { useBreadcrumbs } from '@cms/composables/useBreadcrumbs';
 import { useConfirm } from '@cms/composables/useConfirm';
 import { useErrors } from '@cms/composables/useErrors';
-import type { CmsBreadcrumb } from '@cms/types';
+import type { CmsBreadcrumb, CmsRevisionDiff } from '@cms/types';
 import { ui } from '@cms/ui';
 
 const props = defineProps<{
@@ -56,6 +57,8 @@ const props = defineProps<{
             changed: number;
             reordered: boolean;
         };
+        diff: CmsRevisionDiff;
+        previewUrl: string;
         publishUrl: string;
         discardUrl: string;
     } | null;
@@ -354,6 +357,33 @@ async function destroy(): Promise<void> {
                     {{ $t('vue-cms::pages.publication.pending_reordered') }}
                 </li>
             </ul>
+
+            <div
+                class="flex flex-col gap-3 border-t border-gray-200 pt-4 dark:border-gray-700"
+            >
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                    <div class="flex flex-col gap-1">
+                        <h3 class="text-sm font-medium">
+                            {{ $t('vue-cms::revisions.diff.title') }}
+                        </h3>
+                        <p :class="ui.muted">
+                            {{ $t('vue-cms::revisions.diff.description') }}
+                        </p>
+                    </div>
+                    <a
+                        v-if="$can('cms.pages.edit')"
+                        :href="pendingRevision.previewUrl"
+                        target="_blank"
+                        rel="noopener"
+                        :class="ui.button"
+                        data-test="pending-preview"
+                    >
+                        {{ $t('vue-cms::revisions.diff.preview') }}
+                    </a>
+                </div>
+
+                <RevisionDiff :diff="pendingRevision.diff" />
+            </div>
 
             <p
                 v-if="!publication.canPublish || !$can('cms.pages.publish')"

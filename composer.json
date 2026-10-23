@@ -25,7 +25,7 @@
         "php": "^8.5",
         "illuminate/support": "^13.0",
         "inertiajs/inertia-laravel": "^3.0",
-        "j87nl/laravel-cms": "^0.3",
+        "j87nl/laravel-cms": "^0.4",
         "tranquil-tools/laravel-vue-form-builder": "^1.10",
         "tranquil-tools/laravel-vue-table-builder": "^1.9"
     },

@@ -29,8 +29,35 @@ A published page can hold a pending revision: changes that are not live yet, pro
 laravel-cms (see [Draft and live mode](https://github.com/J87NL/laravel-cms/blob/main/docs/mcp-tools.md#draft-and-live-mode)).
 The page editor then shows a "Changes waiting to be published" panel under the publication panel, with who proposed
 them, who changed them last and when, which page fields change, how many blocks are added, changed and removed, and
-whether their order changes. These are counted against the page as it was when the proposal started, so edits made in
-the editor in the meantime are not listed. The fields and blocks below the panel still show the live page.
+whether their order changes. The fields and blocks below the panel still show the live page.
+
+### What changes
+
+Under the summary, "What changes" compares the proposal with the live page, exactly as publishing would apply it
+(the `DiffPendingRevision` action of laravel-cms, see
+[Comparing a pending revision](https://github.com/J87NL/laravel-cms/blob/main/docs/revisions.md#comparing-a-pending-revision-with-the-live-page)).
+Edits made in the editor in the meantime that the proposal left alone are therefore not listed as changes.
+
+- **Page fields:** every changed field with its live value (struck through) and its new value. Text fields (title,
+  menu title, SEO title and description) show a word-level diff instead. The parent page shows its title and path,
+  the share image its alt text and id.
+- **Blocks:** all blocks in their order after publishing, each with a badge: Added, Removed, Changed or Unchanged.
+  Removed blocks stay at the place they had. A block that changes place says from which position to which. Changed
+  values are listed by the label of the block form field (for repeaters with the item number, for example
+  "Tiles › 2 › Name"); rich text is compared as plain text with a word-level diff, other text values too. When rich
+  text changes but its text stays the same (only formatting or a link), a notice says so. Changed link targets
+  (`href`, and `src` and `srcset` where a block allows them) are listed under "Link targets", old and new, one per
+  line, so a changed link is never hidden. A change of visibility is shown as "Visible: Yes → No". Unchanged blocks
+  are dimmed. A removed block stays after the nearest block before it that keeps its place, or before the nearest
+  block after it that keeps its place when there is none.
+
+"Preview with changes" opens a signed, expiring, `noindex` preview of the page with the proposal applied
+(`PreviewController::pendingUrl()` of laravel-cms, see
+[Previewing a pending revision](https://github.com/J87NL/laravel-cms/blob/main/docs/previews.md#previewing-a-pending-revision)).
+Nothing is written. The panel, the comparison and the link are only part of the page editor, which needs
+`cms.pages.edit`. The preview itself also needs a signed-in user with `cms.pages.edit`, so a forwarded link does not
+open for anyone else. The link belongs to the pending revision it was made for: once that is published or discarded,
+it answers 404, also when a new proposal has started since.
 
 | Button | Route | What happens |
 |---|---|---|
