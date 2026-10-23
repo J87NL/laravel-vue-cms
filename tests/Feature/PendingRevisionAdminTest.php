@@ -9,6 +9,7 @@ use J87NL\Cms\Blocks\BlockRegistry;
 use J87NL\Cms\CmsPermission;
 use J87NL\Cms\Enums\PageStatus;
 use J87NL\Cms\Models\Block;
+use J87NL\Cms\Models\MediaAsset;
 use J87NL\Cms\Models\Page;
 use J87NL\Cms\Models\Revision;
 use J87NL\Cms\Pages\PendingRevisionEditor;
@@ -294,6 +295,67 @@ test('scheduling respects the page write gate', function (): void {
     ])->assertForbidden();
 
     expect($page->fresh()->unpublish_at)->toBeNull();
+});
+
+test('the diff shows a parent page, a social image and a yes or no field by name', function (): void {
+    $parent = makePage([
+        'title' => 'Ouder',
+        'slug' => 'ouder',
+    ], PageStatus::Published);
+    $page = makePage([
+        'title' => 'Live',
+        'slug' => 'live',
+    ], PageStatus::Published);
+    $image = MediaAsset::query()
+        ->create([
+            'alt' => 'Het strand',
+        ]);
+
+    app(PendingRevisionEditor::class)->updatePage($page, [
+        'parent_id' => $parent->id,
+        'og_image_id' => $image->id,
+        'noindex' => true,
+    ], null);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $fields = collect($this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->json('props.pendingRevision.diff.fields'))
+        ->keyBy('key');
+
+    expect($fields['parent_id']['after'])->toBe(sprintf('Ouder (/%s)', $parent->path))
+        ->and($fields['og_image_id']['after'])->toBe(sprintf('Het strand (#%d)', $image->id))
+        ->and($fields['noindex']['before'])->toBe(__('vue-cms::revisions.diff.no'))
+        ->and($fields['noindex']['after'])->toBe(__('vue-cms::revisions.diff.yes'));
+});
+
+test('the diff shows the id of a social image without alt text', function (): void {
+    $page = makePage([
+        'title' => 'Live',
+        'slug' => 'live',
+    ], PageStatus::Published);
+    $image = MediaAsset::query()
+        ->create([
+            'alt' => '',
+        ]);
+
+    app(PendingRevisionEditor::class)->updatePage($page, [
+        'og_image_id' => $image->id,
+    ], null);
+
+    $this->actingWithPermissions([
+        CmsPermission::PagesEdit->value,
+    ]);
+
+    $fields = collect($this->get(route('cms.pages.edit', $page), $this->inertiaHeaders())
+        ->assertOk()
+        ->json('props.pendingRevision.diff.fields'))
+        ->keyBy('key');
+
+    expect($fields['og_image_id']['after'])->toBe(sprintf('#%d', $image->id));
 });
 
 test('the page editor shows what the pending revision changes compared with the live page', function (): void {

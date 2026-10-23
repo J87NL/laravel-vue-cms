@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { trans } from 'laravel-vue-i18n';
-import type { CmsBlockDiff, CmsRevisionDiff, CmsValueDiff } from '@cms/types';
+import type {
+    CmsBlockDiff,
+    CmsRevisionDiff,
+    CmsValueDiff,
+    CmsWordSegment,
+} from '@cms/types';
 import { ui } from '@cms/ui';
 
 defineProps<{
@@ -15,7 +20,7 @@ const statusClasses: Record<CmsBlockDiff['status'], string> = {
         'border border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-200',
 };
 
-const segmentClasses: Record<string, string> = {
+const segmentClasses: Record<CmsWordSegment['type'], string> = {
     added: 'rounded-sm bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200',
     removed:
         'rounded-sm bg-red-50 text-red-800 line-through dark:bg-red-950 dark:text-red-200',
@@ -154,7 +159,7 @@ function hasWords(change: CmsValueDiff): boolean {
                                 >
                             </dd>
                             <dd
-                                v-else
+                                v-else-if="!change.markupChanged"
                                 class="flex flex-col gap-0.5 break-words"
                             >
                                 <span
