@@ -1,6 +1,6 @@
 # Composables and types
 
-The pages share three composables, a few types and a set of class names. You can import them in your own pages
+The pages share four composables, a few types and a set of class names. You can import them in your own pages
 through the `@cms` alias, for example when you [replace a page](vue-pages.md#replacing-a-page).
 
 ## useBreadcrumbs
@@ -46,6 +46,25 @@ const errors = useErrors(['import']);
 
 Returns a computed list of the messages in the `errors` page prop for the given keys. Keys without a message are
 left out.
+
+## usePagePadding
+
+```vue
+<script setup lang="ts">
+import { usePagePadding } from '@cms/composables/usePagePadding';
+
+const padded = usePagePadding();
+</script>
+
+<template>
+    <div class="flex flex-col gap-6" :class="{ 'p-4': padded }">
+        <!-- ... -->
+    </div>
+</template>
+```
+
+Returns the value provided under the injection key `pagePadding` (exported as `PAGE_PADDING`), or `true` without
+one. See [Host app contract](../host-app-contract.md#page-padding).
 
 ## Types
 

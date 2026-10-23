@@ -4,6 +4,10 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- The pages drop their `p-4` padding when a layout provides `pagePadding` as `false` (`usePagePadding()` from `@cms/composables/usePagePadding`), so a host can render them, for example the website settings, inside a settings layout that pads its content itself. Without a provider nothing changes.
+
 ## [0.4.0] - 2026-10-23
 
 ### Added

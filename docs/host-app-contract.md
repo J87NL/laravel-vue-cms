@@ -20,6 +20,19 @@ TableBuilder table for row actions with a confirmation, such as deleting a block
 
 Without a provided function every confirmation resolves to `false`, so destructive actions do nothing.
 
+## Page padding
+
+Every page wraps its content in `p-4`. When you render a page inside a layout that pads its content itself, such as
+a settings layout with its own menu, provide `false` under the injection key `pagePadding` in that layout and the
+page drops its own padding:
+
+```ts
+provide('pagePadding', false);
+```
+
+Without a provider the pages keep their padding. `usePagePadding()` from `@cms/composables/usePagePadding` reads the
+key, which it exports as `PAGE_PADDING`.
+
 ## Breadcrumbs
 
 Every page sets a `breadcrumbs` layout prop with `setLayoutProps()` from `@inertiajs/vue3`. The value is a list of
