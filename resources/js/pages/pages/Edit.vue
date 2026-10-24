@@ -9,6 +9,7 @@ import RevisionDiff from '@cms/components/RevisionDiff.vue';
 import { useBreadcrumbs } from '@cms/composables/useBreadcrumbs';
 import { useConfirm } from '@cms/composables/useConfirm';
 import { useErrors } from '@cms/composables/useErrors';
+import { usePagePadding } from '@cms/composables/usePagePadding';
 import type { CmsBreadcrumb, CmsRevisionDiff } from '@cms/types';
 import { ui } from '@cms/ui';
 
@@ -74,6 +75,8 @@ const props = defineProps<{
 
 useBreadcrumbs(() => props.breadcrumbs);
 
+const padded = usePagePadding();
+
 const errors = useErrors(['page']);
 
 const confirm = useConfirm();
@@ -125,7 +128,7 @@ async function destroy(): Promise<void> {
 <template>
     <Head :title="page.title" />
 
-    <div class="flex max-w-5xl flex-col gap-6 p-4">
+    <div class="flex max-w-5xl flex-col gap-6" :class="{ 'p-4': padded }">
         <div class="flex flex-wrap items-start justify-between gap-4">
             <div class="flex flex-col gap-1">
                 <h1 :class="ui.title">{{ page.title }}</h1>
