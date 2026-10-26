@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.4.2] - 2026-10-26
+
+### Changed
+
+- Allows `j87nl/laravel-cms` 0.5 next to 0.4, so hosts can update to laravel-cms 0.5 with its contact form spam checks.
+
 ## [0.4.1] - 2026-10-24
 
 ### Added
@@ -81,6 +87,7 @@ First release, extracted from the j87.nl app.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
 [Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.1...HEAD
+[0.4.2]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.2.1...v0.3.0
