@@ -14,6 +14,7 @@ The package ships English (`en`) and Dutch (`nl`) translations in its `lang` fol
 | `redirects.php` | The redirects screen and the CSV import |
 | `revisions.php` | The revision list |
 | `settings.php` | The site settings |
+| `spam_protection.php` | The spam protection screen |
 
 Some messages come from laravel-cms and use its `cms::` namespace, such as the validation errors of its actions and the
 labels of its enums. Its files are listed in

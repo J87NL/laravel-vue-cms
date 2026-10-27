@@ -58,3 +58,11 @@ $items = collect(config('j87nl.navigation', []))
 ```
 
 Share the result with Inertia, for example from your `HandleInertiaRequests` middleware.
+
+## Screens without an item
+
+The [spam protection](screens/spam-protection.md) screen (`cms.spam-protection.edit`) has no registered item, because
+it belongs in a settings menu rather than in the main sidebar. Add it to your own settings menu right after the site
+settings, with the permission `cms.settings`. Its route name does not start with `cms.settings.`, so an item that is
+active on `cms.settings.*` stays inactive on this screen.
+

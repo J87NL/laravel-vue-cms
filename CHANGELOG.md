@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - 2026-10-27
+
+### Added
+
+- A spam protection screen at `admin/cms/settings/spam-protection` (`cms.spam-protection.edit` and `cms.spam-protection.update`, permission `cms.settings`) with the Cloudflare Turnstile keys of the contact form: a site key, and a secret key in a password field. A status line says whether Turnstile is on. A saved secret key is never sent back to the browser: the field only shows that one is stored, leaving it empty keeps it, and a remove checkbox clears it. With both keys set, laravel-cms 0.6 shows Turnstile on the contact form.
+- The `cms/Form` page takes an optional `notice` prop, a status line above the form.
+- The translation file `spam_protection.php`.
+
+### Changed
+
+- Requires `j87nl/laravel-cms` 0.6, which stores the Turnstile keys in the site settings.
+
+### Upgrade notes
+
+- Update `j87nl/laravel-cms` to 0.6 along with this version and run `php artisan migrate`.
+- The package registers no navigation item for the new screen. Add `cms.spam-protection.edit` to your settings menu, right after the site settings, for users with `cms.settings`.
+- Rebuild your front-end assets: `pages/Form.vue` changed.
+
 ## [0.4.2] - 2026-10-26
 
 ### Changed

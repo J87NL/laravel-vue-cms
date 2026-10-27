@@ -11,6 +11,7 @@
     - [Menus](screens/menus.md)
     - [Redirects](screens/redirects.md)
     - [Site settings](screens/settings.md)
+    - [Spam protection](screens/spam-protection.md)
 - Front-end
     - [Vue pages](frontend/vue-pages.md)
     - [Composables and types](frontend/composables.md)

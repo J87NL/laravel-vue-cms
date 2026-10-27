@@ -41,6 +41,7 @@ One page for every screen that shows a single form.
 |---|---|---|
 | `title` | `string` | The heading |
 | `description` | `string \| null` | A line below the heading |
+| `notice` | `string \| null` | A status line in a bordered box above the form. Only the spam protection screen sends it. |
 | `breadcrumbs` | `CmsBreadcrumb[]` | |
 | `backUrl` | `string \| null` | The target of the back button. No button when empty. |
 | `form` | `FormSchema` | The FormBuilder form |

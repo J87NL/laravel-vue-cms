@@ -13,7 +13,7 @@ This page describes what each permission opens in the admin:
 | `cms.menus` | `Menus` | The menus screen |
 | `cms.media` | `Media` | The media screen |
 | `cms.redirects` | `Redirects` | The redirects screen |
-| `cms.settings` | `Settings` | The site settings |
+| `cms.settings` | `Settings` | The site settings and the spam protection screen |
 
 The routes check them with Laravel's `can:` middleware, so `$user->can('cms.media')` must answer for each of
 them. Map them to your roles with gates or a permission package, as the

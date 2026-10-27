@@ -94,6 +94,8 @@ Permission: `cms.settings`.
 |---|---|---|
 | `GET` | `settings` | `cms.settings.edit` |
 | `PUT` | `settings` | `cms.settings.update` |
+| `GET` | `settings/spam-protection` | `cms.spam-protection.edit` |
+| `PUT` | `settings/spam-protection` | `cms.spam-protection.update` |
 
 ## Responses
 

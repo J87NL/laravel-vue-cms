@@ -13,6 +13,7 @@ use J87NL\VueCms\Http\Controllers\PagePublicationController;
 use J87NL\VueCms\Http\Controllers\RedirectController;
 use J87NL\VueCms\Http\Controllers\RevisionController;
 use J87NL\VueCms\Http\Controllers\SettingsController;
+use J87NL\VueCms\Http\Controllers\SpamProtectionController;
 
 Route::middleware(config('vue-cms.admin.middleware'))
     ->prefix(config('vue-cms.admin.prefix'))
@@ -81,5 +82,7 @@ Route::middleware(config('vue-cms.admin.middleware'))
         Route::middleware(sprintf('can:%s', CmsPermission::Settings->value))->group(function (): void {
             Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
             Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
+            Route::get('settings/spam-protection', [SpamProtectionController::class, 'edit'])->name('spam-protection.edit');
+            Route::put('settings/spam-protection', [SpamProtectionController::class, 'update'])->name('spam-protection.update');
         });
     });

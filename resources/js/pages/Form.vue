@@ -13,6 +13,7 @@ import { ui } from '@cms/ui';
 const props = defineProps<{
     title: string;
     description?: string | null;
+    notice?: string | null;
     breadcrumbs: CmsBreadcrumb[];
     backUrl?: string | null;
     form: FormSchema;
@@ -73,6 +74,10 @@ async function replaceFile(): Promise<void> {
                 {{ $t('vue-cms::common.back') }}
             </Link>
         </div>
+
+        <p v-if="notice" :class="[ui.panel, 'text-sm']" role="status">
+            {{ notice }}
+        </p>
 
         <img
             v-if="preview?.url"
