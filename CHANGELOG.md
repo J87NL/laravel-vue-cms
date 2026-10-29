@@ -6,7 +6,7 @@ All notable changes to this package are documented here. The format follows [Kee
 
 ### Changed
 
-- Allows `j87nl/laravel-cms` 0.7 next to 0.6, so hosts can update to laravel-cms 0.7 with its `media_upload` MCP tool. The admin needs no changes for it.
+- Allows `j87nl/laravel-cms` 0.7 next to 0.6, so hosts can update to laravel-cms 0.7 with its `media_upload` MCP tool. The admin code needs no changes for it; the media screen docs now mention `media_upload`.
 
 ## [0.5.0] - 2026-10-27
 
@@ -110,7 +110,7 @@ First release, extracted from the j87.nl app.
 - Media, menus, redirects with CSV import, and site settings.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
-[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.1...HEAD
 [0.5.1]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.1...v0.4.2

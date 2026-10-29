@@ -69,7 +69,7 @@ The confirmation warns that unsaved changes in the form above are lost, because 
 replacement. A refused file shows its error at the file field and leaves the current file in place. After a replacement
 the screen opens again with a toast.
 
-There is no MCP tool to upload or replace an image; that only happens here.
+Replacing and deleting images only happens here. From laravel-cms 0.7 on, assistants can also add new images through the MCP tool [`media_upload`](https://github.com/J87NL/laravel-cms/blob/main/docs/mcp-tools.md#uploading-images), which runs the same `UploadMedia` checks as this screen.
 
 ## Deleting
 
