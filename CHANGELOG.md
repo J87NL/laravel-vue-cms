@@ -2,6 +2,16 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.5.2] - 2026-10-30
+
+### Changed
+
+- Allows `j87nl/laravel-cms` 0.8 next to 0.6 and 0.7, so hosts can update to laravel-cms 0.8 with its MCP tools `media_delete`, chunked uploads and `source_url`. The admin code needs no changes; the media screen docs mention `media_delete`.
+
+### Upgrade notes
+
+- laravel-cms 0.8 adds a migration (`cms_media_upload_sessions`): run `php artisan migrate`. Keep the Laravel scheduler running so its `cms:prune-media-uploads` removes expired chunked uploads, and keep the chunk disk (`cms.media.chunked_uploads.disk`, default `local`) private. See the laravel-cms 0.8.0 upgrade notes.
+
 ## [0.5.1] - 2026-10-29
 
 ### Changed
@@ -110,7 +120,8 @@ First release, extracted from the j87.nl app.
 - Media, menus, redirects with CSV import, and site settings.
 - Navigation items and permissions registered in the app's config, and Dutch and English translations.
 
-[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/J87NL/laravel-vue-cms/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/J87NL/laravel-vue-cms/compare/v0.4.1...v0.4.2
